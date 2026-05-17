@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  web:
+    image: huboperacional-site:v0.1.0
+    networks:
+      - network_swarm_public
+    environment:
+      - NEXT_PUBLIC_PAINEL_URL=https://api.ads4pros.com
+      - NODE_ENV=production
+    deploy:
+      replicas: 1
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.huboperacional.rule=Host(`huboperacional.com.br`)
+        - traefik.http.routers.huboperacional.entrypoints=websecure
+        - traefik.http.routers.huboperacional.tls.certresolver=letsencryptresolver
+        - traefik.http.services.huboperacional.loadbalancer.server.port=3000
+
+networks:
+  network_swarm_public:
+    external: true
