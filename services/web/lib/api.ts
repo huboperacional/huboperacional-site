@@ -21,12 +21,18 @@ export type ApiResult<T = Record<string, unknown>> =
   | { ok: true; data: T }
   | { ok: false; error: string; status?: number };
 
+const REQUEST_TIMEOUT_MS = 15_000;
+
 async function postJson<T>(path: string, body: object): Promise<ApiResult<T>> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+
   try {
     const resp = await fetch(`${PAINEL_URL}${path}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
+      signal: controller.signal,
     });
     if (resp.status === 429) {
       return { ok: false, error: 'Muitas requisicoes. Aguarde alguns minutos e tente novamente.', status: 429 };
@@ -39,7 +45,12 @@ async function postJson<T>(path: string, body: object): Promise<ApiResult<T>> {
     }
     return { ok: true, data: data as T };
   } catch (err) {
+    if (err instanceof DOMException && err.name === 'AbortError') {
+      return { ok: false, error: 'Tempo de resposta esgotado. Tente novamente.' };
+    }
     return { ok: false, error: 'Erro de conexao. Verifique sua internet.' };
+  } finally {
+    clearTimeout(timeoutId);
   }
 }
 
