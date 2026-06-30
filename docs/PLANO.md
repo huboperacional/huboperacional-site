@@ -50,8 +50,8 @@ Entregue 2026-05-17, v0.1.1 em 2026-05-17. Tudo verificado em prod (`https://hub
 
 ## Frente: v0.2 — Qualidade
 
-- `[0]` Vitest (unit) — `lib/tracking.ts`, `lib/api.ts`
-- `[0]` Playwright (E2E) — fluxo dos 2 forms + navegação
+- `[5-T]` Vitest (unit) — `lib/structured-data.ts`, `lib/tracking.ts`, `lib/api.ts`. 16 testes verdes (`npm run test`). Setup `vitest` + `jsdom` + `vitest.config.ts`.
+- `[0]` Playwright (E2E) — fluxo dos 2 forms + navegação. **Cuidado:** submit real dispara POST ao Painel (`/public/*`) criando leads/afiliados; precisa de network mockada ou endpoint de teste.
 - `[0]` Smoke E2E real do affiliate-signup happy-path (dispara 4 WA ao operador `5567933009440`) — **gated por operador** (R5)
 
 ## Frente: v0.2 — Conteúdo
@@ -64,3 +64,4 @@ Entregue 2026-05-17, v0.1.1 em 2026-05-17. Tudo verificado em prod (`https://hub
 
 - **2026-06-30** — Criação do PLANO ao trazer o projeto pro canon Percus v6.26.1 (umbrella REORGANIZAR_PROJETO). MVP v0.1.1 registrado como `[5-T]`; backlog v0.2 do HANDOFF formalizado como frentes `[0]`.
 - **2026-06-30** — Frente SEO & Tracking: Schema.org Org+BreadcrumbList, Twitter cards e sitemap lastmod implementados e verificados em build → `[4-C]` (prod pendente, deploy é cadência R24 + sem push antes de 01/07). Commits `e68215c`, `17e4919`, `547403f`.
+- **2026-06-30** — Frente Qualidade: Vitest + jsdom + 16 unit tests (structured-data, tracking, api) verdes → `[5-T]`. Playwright deferido (risco de submit real). Build de produção segue OK com os `.test.ts`.
