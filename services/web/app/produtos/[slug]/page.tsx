@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { PRODUCTS, getProductBySlug, getAllSlugs } from '@/lib/products';
+import { breadcrumbJsonLd } from '@/lib/structured-data';
 
 type Params = { slug: string };
 
@@ -41,6 +42,12 @@ export default async function ProdutoDetailPage({ params }: { params: Promise<Pa
     ...(product.website && { url: product.website }),
   };
 
+  const breadcrumb = breadcrumbJsonLd([
+    { name: 'Início', path: '/' },
+    { name: 'Produtos', path: '/produtos' },
+    { name: product.title, path: `/produtos/${product.slug}` },
+  ]);
+
   const related = PRODUCTS.filter((p) => p.slug !== product.slug && p.category === product.category).slice(0, 3);
 
   return (
@@ -48,6 +55,10 @@ export default async function ProdutoDetailPage({ params }: { params: Promise<Pa
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }}
       />
 
       <article className="max-w-3xl mx-auto px-6 py-12">
