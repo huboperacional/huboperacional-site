@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { TrackingProvider } from '@/components/TrackingProvider';
+import { organizationJsonLd } from '@/lib/structured-data';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -20,6 +21,11 @@ export const metadata: Metadata = {
     title: 'Hub Operacional — Software Percus',
     description: 'Softwarehouse Percus: produtos B2C, B2B e integrações.',
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Hub Operacional — Software Percus',
+    description: 'Softwarehouse Percus: produtos B2C, B2B e integrações.',
+  },
   robots: { index: true, follow: true },
 };
 
@@ -35,6 +41,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="min-h-screen flex flex-col">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd()) }}
+        />
         <TrackingProvider />
         <Header />
         <main className="flex-1">{children}</main>
