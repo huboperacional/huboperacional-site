@@ -1,0 +1,37 @@
+# catalog-info.yaml — Percus feature catalog (Fase 6+)
+# Mora na raiz do repo. Consumido pelo crawler do Painel via:
+#   1. Skill catalog-publish (push, automatico no on-stop quando arquivo muda)
+#   2. catalogCrawler.py (pull, 1h, fallback)
+# Convencao completa: ${env:PERCUS_CANON_DIR}\05_FEATURE_TRACKING.md
+
+apiVersion: percus.io/v1
+kind: Component
+metadata:
+  name: huboperacional-site
+  description: Site vitrine publico dos produtos Percus + porta de entrada do programa de afiliados (huboperacional.com.br)
+spec:
+  type: site
+  lifecycle: production
+  owner: team-percus
+  system: conteudo
+  features:
+    - slug: tracking-15-campos
+      version: 1.0.0
+      status: adopted
+      applied_at: 2026-05-17
+      notes: "lib/tracking.ts — UTM + click IDs, localStorage TTL 90d, anexado as submissions"
+
+    - slug: lead-form-v2
+      version: 2.0.0
+      status: adopted
+      applied_at: 2026-05-17
+      notes: "form /contato -> POST /public/leads do Painel (tabela site_leads)"
+
+    - slug: affiliate-public-signup
+      version: 1.0.0
+      status: adopted
+      applied_at: 2026-05-17
+      notes: "form /afiliados -> POST /public/affiliate-signup do Painel (reusa createAffiliate + welcome WA)"
+
+  dependsOn:
+    - component:painel-gestao        # consome a API publica (/public/leads, /public/affiliate-signup)
