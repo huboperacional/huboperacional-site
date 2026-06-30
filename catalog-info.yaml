@@ -8,7 +8,7 @@ apiVersion: percus.io/v1
 kind: Component
 metadata:
   name: huboperacional-site
-  description: Site vitrine publico dos produtos Percus + porta de entrada do programa de afiliados (huboperacional.com.br)
+  description: Site vitrine dos produtos Percus + entrada do programa de afiliados
 spec:
   type: site
   lifecycle: production
