@@ -4,26 +4,34 @@
 **Última atualização:** 2026-06-30
 **Canon Percus:** v6.26.1 (ver `.percus-version`). Tracking files + diretivas adotadas em 2026-06-30.
 **Repo:** `github.com/huboperacional/huboperacional-site` (público, branch `main`, tags `v0.1.0` + `v0.1.1`).
-**Último commit:** `4f28e7c feat: v0.1.1 follow-ups (fetch timeout + favicon + OG image)`.
+**Último commit:** `c63ca84 docs(tracking): frente Qualidade [5-T] no PLANO` (local; push só ≥01/07).
 
 ---
 
+## ⚠️ Push pendente
+
+**9+ commits locais na `main` ainda NÃO pushados** (operador pediu: sem push antes de 01/07). Inclui: adoção do canon, fix do catalog (description), frente SEO (3 commits), frente Qualidade. A partir de 01/07: `git push` + considerar tag nova. **Também há 1 commit local no repo do Painel** (`13cc94f` fix do catalog ingest — já deployado em prod, mas não pushado).
+
 ## Estado atual
 
-- **Funcionando end-to-end (verificado em prod):** 6 páginas + 2 forms (lead → `site_leads`, affiliate → Painel) + tracking 15 campos + sitemap/robots. MVP v0.1.1 no ar.
-- **Quebrado / regressão:** nenhum.
-- **Último passo concluído:** adoção do canon Percus v6.26.1 — criados `.percus-version`, `CLAUDE.md`, `AGENTS.md`, `docs/PLANO.md`, `docs/mock-audit.md`, `.claude/settings.json`, `catalog-info.yaml` + ADR-0001.
-- **Próximo passo imediato:** escolher uma frente do v0.2 no `docs/PLANO.md` (sugestão: Schema.org Organization + BreadcrumbList — quick win de SEO).
+- **Funcionando end-to-end (verificado em prod):** 6 páginas + 2 forms + tracking 15 campos + sitemap/robots. MVP v0.1.1 no ar.
+- **Implementado nesta sessão (verificado LOCAL, falta prod):** SEO — Organization + BreadcrumbList JSON-LD, Twitter cards, sitemap lastmod curado (`[4-C]`). Qualidade — Vitest + jsdom + 16 unit tests verdes (`[5-T]`).
+- **Quebrado / regressão:** nenhum. ⚠️ Build local exige `NODE_ENV=production npm run build` (settings.json seta development e quebra prerender /404 — ver CLAUDE.md / memória).
+- **Último passo concluído:** frente Qualidade (Vitest) — 16 testes verdes, commits `ebdb5e8`/`3f57122`/`c63ca84`.
+- **Próximo passo imediato:** a partir de 01/07 fazer push; depois deploy (R24) e re-verificar SEO em prod (curl + Schema Validator) → subir SEO de `[4-C]` pra `[5-T]`. Frentes v0.2 restantes (OG por produto, Pixels, Conteúdo) **dependem de input do operador** (design/IDs/textos).
 
 ## Status de Features
 
-> Fonte da verdade: `docs/PLANO.md`. Tags adaptadas pro perfil frontend: `[0]` planejado · `[4-C]` componente renderiza dado real · `[5-T]` ✅ verificado E2E.
+> Fonte da verdade: `docs/PLANO.md`. Tags frontend: `[0]` planejado · `[4-C]` renderiza/verificado em build · `[5-T]` ✅ verificado E2E.
 
 | Frente | Feature | Status | Próxima etapa |
 |--------|---------|--------|---------------|
 | MVP v0.1 | 6 páginas + 2 forms + tracking + sitemap | `[5-T]` ✓ | — (em produção) |
-| v0.2 SEO & Tracking | Schema.org Org+Breadcrumb, OG per-produto, lastmod, Twitter cards, pixels | `[0]` | Iniciar |
-| v0.2 Qualidade | Vitest + Playwright, smoke real affiliate (gated) | `[0]` | Iniciar |
+| v0.2 SEO | Organization+Breadcrumb JSON-LD, Twitter cards, sitemap lastmod | `[4-C]` | Deploy + verificar prod → `[5-T]` |
+| v0.2 SEO | OG por produto (next/og per-page) | `[0]` | Gate de design R10 (mockup) |
+| v0.2 SEO | Pixels Meta + Google Ads | `[0]` | Operador: IDs + decisão LGPD |
+| v0.2 Qualidade | Vitest unit (structured-data, tracking, api) | `[5-T]` | — (16 testes verdes) |
+| v0.2 Qualidade | Playwright E2E | `[0]` | Estratégia de mock (submit real = risco) |
 | v0.2 Conteúdo | Conteúdo definitivo dos 8 produtos | `[0]` 🎨? | Curadoria do operador |
 
 ## O que está no ar
