@@ -42,10 +42,10 @@ Entregue 2026-05-17, v0.1.1 em 2026-05-17. Tudo verificado em prod (`https://hub
 
 ## Frente: v0.2 — SEO & Tracking
 
-- `[0]` Schema.org Organization + BreadcrumbList (JSON-LD global no layout)
+- `[4-C]` Schema.org Organization (sitewide) + BreadcrumbList (página de produto) — `lib/structured-data.ts` + layout + produto. Verificado em build (prerender) — falta prod (deploy R24).
+- `[4-C]` Open Graph Twitter cards (`twitter:card` summary_large_image) — em `layout.tsx`. Verificado em build — falta prod.
+- `[4-C]` Sitemap com `lastmod` curado (constante por página + `updatedAt` por produto) — `sitemap.ts` + `products.ts`. Verificado (13 URLs com lastmod 2026-05-17) — falta prod.
 - `[0]` OG image por produto via next/og per-page (hoje só default global)
-- `[0]` Sitemap com `lastmod` real (hoje sem lastmod)
-- `[0]` Open Graph Twitter cards (`twitter:card` summary_large_image)
 - `[0]` Pixel Meta + Google Ads tag (gtag/fbq) — respeitar R18 (tracking ≠ auth)
 
 ## Frente: v0.2 — Qualidade
@@ -63,3 +63,4 @@ Entregue 2026-05-17, v0.1.1 em 2026-05-17. Tudo verificado em prod (`https://hub
 ## Histórico (changelog do plano em si)
 
 - **2026-06-30** — Criação do PLANO ao trazer o projeto pro canon Percus v6.26.1 (umbrella REORGANIZAR_PROJETO). MVP v0.1.1 registrado como `[5-T]`; backlog v0.2 do HANDOFF formalizado como frentes `[0]`.
+- **2026-06-30** — Frente SEO & Tracking: Schema.org Org+BreadcrumbList, Twitter cards e sitemap lastmod implementados e verificados em build → `[4-C]` (prod pendente, deploy é cadência R24 + sem push antes de 01/07). Commits `e68215c`, `17e4919`, `547403f`.

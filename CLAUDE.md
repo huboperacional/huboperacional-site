@@ -52,8 +52,10 @@ huboperacional-site/
 cd services/web
 npm install
 npm run dev        # http://localhost:3000
-npm run build      # sanity (output standalone)
+NODE_ENV=production npm run build   # sanity (output standalone)
 ```
+
+> ⚠️ Build local **precisa** de `NODE_ENV=production`. O `.claude/settings.json` (canon) seta `NODE_ENV=development` pro dev server, e isso vaza pro `next build`, quebrando o prerender de `/404` (`<Html> should not be imported...`). O Docker não é afetado (builder stage não força development). Ver memória [[build-nodeenv-production]].
 
 ## Critério de "pronto" para qualquer feature
 

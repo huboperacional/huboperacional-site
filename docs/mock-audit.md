@@ -58,3 +58,4 @@ grep -rn "const.*= \[" services/web/app services/web/components --include="*.tsx
 ## Histórico
 
 - **2026-06-30** — Auditoria inicial ao adotar o canon Percus: 6 telas ✅ real (2 forms com API real do Painel, 4 de conteúdo estático), 0 mocks, 0 só-UI, 0 toasts mentirosos. Produtos de `lib/products.ts` documentados como conteúdo estático intencional.
+- **2026-06-30** — Frente SEO (Org/Breadcrumb JSON-LD, Twitter cards, sitemap lastmod): só metadata, sem mudança de UI/estado. Status das telas inalterado.
