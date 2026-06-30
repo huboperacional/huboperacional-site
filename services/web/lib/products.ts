@@ -8,6 +8,7 @@ export type Product = {
   icon: string;        // lucide-react icon name
   category: 'b2c' | 'b2b' | 'integracao' | 'agencia';
   status: 'producao' | 'beta' | 'desenvolvimento';
+  updatedAt: string;   // ISO YYYY-MM-DD — last meaningful content change (sitemap lastmod)
   website?: string;
   description: string;
   features: string[];
@@ -31,6 +32,7 @@ export const PRODUCTS: Product[] = [
       'Dashboard web com gastos por categoria + metas',
       'Lembretes proativos de contas a pagar',
     ],
+    updatedAt: '2026-05-17',
     cta: { label: 'Conhecer a plataforma', url: 'https://familiamilionaria.com.br' },
   },
   {
@@ -49,6 +51,7 @@ export const PRODUCTS: Product[] = [
       'Agendamento de reuniao direto pelo bot',
       'Integracao com CRMs (Pipedrive, HubSpot, GHL)',
     ],
+    updatedAt: '2026-05-17',
     cta: { label: 'Conhecer a plataforma', url: 'https://tiatendo.com.br' },
   },
   {
@@ -66,6 +69,7 @@ export const PRODUCTS: Product[] = [
       'Publicacao agendada Instagram/Facebook/TikTok',
       'Analytics de engajamento integrado',
     ],
+    updatedAt: '2026-05-17',
     cta: { label: 'Falar com o time', url: '/contato?produto=social-midia-ia' },
   },
   {
@@ -83,6 +87,7 @@ export const PRODUCTS: Product[] = [
       'Mapeamento bidirecional de mensagens GHL <-> WhatsApp',
       'Modulo ZapFlow pra orquestracao de fluxos',
     ],
+    updatedAt: '2026-05-17',
     cta: { label: 'Documentacao API', url: '/contato?produto=ghl-evolution' },
   },
   {
@@ -100,6 +105,7 @@ export const PRODUCTS: Product[] = [
       'Suporta ate 100 contas Meta + 100 Google em paralelo',
       'Dashboard com metricas consolidadas por cliente',
     ],
+    updatedAt: '2026-05-17',
     cta: { label: 'Falar com o time', url: '/contato?produto=paid-midia-automation' },
   },
   {
@@ -117,6 +123,7 @@ export const PRODUCTS: Product[] = [
       'WhatsApp bidirecional pra criar/atualizar tarefas',
       'Multi-tenant com workspaces isolados',
     ],
+    updatedAt: '2026-05-17',
     cta: { label: 'Conhecer a plataforma', url: '/contato?produto=plexco-tasks' },
   },
   {
@@ -134,6 +141,7 @@ export const PRODUCTS: Product[] = [
       'Lembretes WhatsApp pros clientes',
       'Material complementar versionado por cliente',
     ],
+    updatedAt: '2026-05-17',
     cta: { label: 'Falar com o time', url: '/contato?produto=plexco-coach' },
   },
   {
@@ -151,6 +159,7 @@ export const PRODUCTS: Product[] = [
       'WhatsApp bidirecional pra cliente',
       'Base de conhecimento integrada',
     ],
+    updatedAt: '2026-05-17',
     cta: { label: 'Notifique-me no lancamento', url: '/contato?produto=plexco-tickets' },
   },
 ];
