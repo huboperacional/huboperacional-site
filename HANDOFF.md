@@ -1,7 +1,9 @@
 # HANDOFF — huboperacional-site
 
-**Status:** ✅ MVP v0.1.1 + **v0.3 `/new-client`** em produção em `https://huboperacional.com.br`. Site image `v0.3.0`, Painel `ads4pros-api:newclient-202607121910`.
+**Status:** ✅ MVP v0.1.1 + **v0.3 `/new-client`** em produção em `https://huboperacional.com.br`. Site image `v0.3.2`, Painel `ads4pros-api:newclient-202607121910`.
 **Última atualização:** 2026-07-12
+
+> **Iterações pós-deploy (2026-07-12, tudo em prod e verificado):** (1) redirect `/new-client` → `/new-client/pt-br` (URL curta sem idioma dava 404); (2) **fix Dockerfile.web: `COPY public/`** — standalone não inclui `public/` e o MVP tinha removido o COPY, então os logos davam 404 em prod; agora os 5 assets servem 200; (3) logos reais dos 5 brands (`public/logos/*.png`, hero HOPE + Edifica/V4/Micro Investors/ADS4Pros) via `next/image` + `images.unoptimized`; (4) campo "Endereço completo" removido do wizard — endereço só nos campos separados (`address_full` segue auto-composto no `buildPayload`). Commits `193559c`, `2ffc8aa` (pushados).
 **Canon Percus:** v6.26.1 (ver `.percus-version`; canônica atual 6.28.0 — divergente, considerar REORGANIZAR antes de trabalho grande).
 **Repo:** `github.com/huboperacional/huboperacional-site` (público, branch `main`, tags `v0.1.0` + `v0.1.1`; imagem prod `v0.3.0`).
 **Último commit:** `d9799c8 feat(new-client): wizard bilingue …` (pushado).
@@ -22,7 +24,7 @@
 - **SEO v0.2 `[4-C]`:** o deploy `v0.3.0` shippou também o código SEO (Organization+Breadcrumb JSON-LD, Twitter cards, sitemap lastmod) — **agora está em prod mas os meta-tags específicos NÃO foram smoke-testados** nesta sessão. Próximo: `curl` + inspeção → mover pra `[5-T]`.
 - **Quebrado / regressão:** nenhum (smoke: /, /produtos, /afiliados, /contato, /sobre, /sitemap.xml todos 200). ⚠️ Build local exige `NODE_ENV=production npm run build` (ver CLAUDE.md / memória).
 - **⚠️ BLOQUEIO pro operador — ativar os 3 side-effects:** pôr no `.env` do Painel: `gowa_send_url` (+ confirmar formato do endpoint GOWA) · `google_sa_json` (service-account + compartilhar planilha V4 edit) · `ghl_token` (+ mapear `ghl_pipeline_id`/`ghl_stage_id` do "01 Marketing Pipeline" via `GET /opportunities/pipelines?locationId=ElbRWEbPclFoAfVW9bm0`). Defaults já no config: `google_sheet_id` (V4) + `ghl_location_id`. Sem isso, persistência + atribuição funcionam; os 3 side-effects logam skip.
-- **Próximo passo imediato (retomada):** (1) operador fornece logos → trocar placeholders textuais por `<Image>` (`public/logos/README.md`); (2) operador preenche as 3 creds → reativar side-effects e verificar cada um; (3) smoke dos meta-tags SEO em prod → `[5-T]`; (4) considerar tag git `v0.3.0`.
+- **Próximo passo imediato (retomada):** (1) operador preenche as 3 creds no `.env` do Painel → reativar side-effects (GOWA/Sheets/GHL) e verificar cada um; (2) smoke dos meta-tags SEO em prod → `[5-T]`; (3) considerar tag git `v0.3.2`. (Logos reais ✅ já em prod.)
 
 ## Status de Features
 
