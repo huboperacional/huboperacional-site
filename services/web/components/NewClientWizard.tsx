@@ -19,6 +19,35 @@ const TOTAL_STEPS = 4; // country, company, owner, finance (welcome/thanks exclu
 
 type Country = '' | 'BR' | 'US';
 
+// Birthdate is shown in the country's locale format (BR: DD/MM/AAAA, US: MM/DD/YYYY)
+// via a masked text input — a native <input type="date"> ignores the desired format
+// and follows the browser locale. We store the masked display string and convert to
+// ISO (YYYY-MM-DD) only at submit / validation.
+function maskDate(raw: string): string {
+  const d = raw.replace(/\D/g, '').slice(0, 8);
+  return [d.slice(0, 2), d.slice(2, 4), d.slice(4, 8)].filter(Boolean).join('/');
+}
+
+function birthdatePlaceholder(country: Country): string {
+  return country === 'US' ? 'MM/DD/YYYY' : 'DD/MM/AAAA';
+}
+
+function birthdateToIso(display: string, country: Country): string {
+  const m = display.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if (!m) return '';
+  const [, first, second, y] = m;
+  const day = country === 'US' ? second : first;
+  const month = country === 'US' ? first : second;
+  const dd = Number(day);
+  const mm = Number(month);
+  const yyyy = Number(y);
+  if (mm < 1 || mm > 12 || dd < 1 || dd > 31 || yyyy < 1900 || yyyy > 2100) return '';
+  const dt = new Date(Date.UTC(yyyy, mm - 1, dd));
+  // Reject impossible dates (e.g. 31/02) via round-trip.
+  if (dt.getUTCFullYear() !== yyyy || dt.getUTCMonth() + 1 !== mm || dt.getUTCDate() !== dd) return '';
+  return `${y}-${month}-${day}`;
+}
+
 type WizardData = {
   country: Country;
   company_name: string;
@@ -100,6 +129,8 @@ export function NewClientWizard({ lang, dict }: { lang: Lang; dict: NewClientDic
       if (data.owner_name.trim().length < 2) e.owner_name = dict.errors.required;
       if (!EMAIL_RE.test(data.owner_email.trim())) e.owner_email = dict.errors.email;
       if (data.owner_phone.replace(/\D/g, '').length < 8) e.owner_phone = dict.errors.required;
+      // Birthdate is optional, but if filled it must be a valid date in the country format.
+      if (data.owner_birthdate && !birthdateToIso(data.owner_birthdate, data.country)) e.owner_birthdate = dict.errors.date;
     }
     if (current === 4) {
       if (!data.payment_method) e.payment_method = dict.errors.selectPayment;
@@ -159,7 +190,7 @@ export function NewClientWizard({ lang, dict }: { lang: Lang; dict: NewClientDic
       owner_name: data.owner_name.trim(),
       owner_email: data.owner_email.trim().toLowerCase(),
       owner_phone: data.owner_phone.trim(),
-      owner_birthdate: data.owner_birthdate || undefined,
+      owner_birthdate: birthdateToIso(data.owner_birthdate, data.country as Country) || undefined,
       fin_is_owner: data.fin_is_owner,
       fin_name: data.fin_is_owner ? undefined : data.fin_name.trim() || undefined,
       fin_whatsapp: data.fin_is_owner ? undefined : data.fin_whatsapp.trim() || undefined,
@@ -301,7 +332,16 @@ export function NewClientWizard({ lang, dict }: { lang: Lang; dict: NewClientDic
               <TextField label={dict.owner.email} type="email" value={data.owner_email} onChange={(v) => set('owner_email', v)} error={errors.owner_email} required />
               <TextField label={dict.owner.phone} type="tel" mono value={data.owner_phone} onChange={(v) => set('owner_phone', v)} error={errors.owner_phone} required />
             </div>
-            <TextField label={dict.owner.birthdate} type="date" value={data.owner_birthdate} onChange={(v) => set('owner_birthdate', v)} optional={dict.common.optional} />
+            <TextField
+              label={dict.owner.birthdate}
+              value={data.owner_birthdate}
+              onChange={(v) => set('owner_birthdate', maskDate(v))}
+              error={errors.owner_birthdate}
+              optional={dict.common.optional}
+              placeholder={birthdatePlaceholder(data.country)}
+              inputMode="numeric"
+              mono
+            />
           </div>
           <NavRow dict={dict} onBack={goBack} onNext={goNext} />
         </div>
@@ -436,6 +476,8 @@ function TextField({
   optional,
   type = 'text',
   mono,
+  placeholder,
+  inputMode,
 }: {
   label: string;
   value: string;
@@ -445,6 +487,8 @@ function TextField({
   optional?: string;
   type?: string;
   mono?: boolean;
+  placeholder?: string;
+  inputMode?: 'text' | 'numeric' | 'tel' | 'email';
 }) {
   return (
     <div>
@@ -454,6 +498,8 @@ function TextField({
       <input
         type={type}
         value={value}
+        placeholder={placeholder}
+        inputMode={inputMode}
         onChange={(e) => onChange(e.target.value)}
         className={`${INPUT}${mono ? ' font-mono text-sm' : ''}`}
       />

@@ -54,7 +54,7 @@ export type NewClientDict = {
     methods: Record<PaymentMethod, string>;
   };
   thanks: { title: string; body: string; backHome: string };
-  errors: { required: string; email: string; selectCountry: string; selectPayment: string; generic: string };
+  errors: { required: string; email: string; date: string; selectCountry: string; selectPayment: string; generic: string };
 };
 
 const PT: NewClientDict = {
@@ -130,6 +130,7 @@ const PT: NewClientDict = {
     required: 'Campo obrigatório',
     email: 'E-mail inválido',
     selectCountry: 'Selecione um país',
+    date: 'Data inválida',
     selectPayment: 'Selecione um método de pagamento',
     generic: 'Não foi possível enviar. Tente novamente.',
   },
@@ -208,6 +209,7 @@ const EN: NewClientDict = {
     required: 'Required field',
     email: 'Invalid e-mail',
     selectCountry: 'Select a country',
+    date: 'Invalid date',
     selectPayment: 'Select a payment method',
     generic: 'Could not submit. Please try again.',
   },
