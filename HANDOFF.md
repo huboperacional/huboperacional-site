@@ -3,7 +3,9 @@
 **Status:** ✅ MVP v0.1.1 + **v0.3 `/new-client`** em produção em `https://huboperacional.com.br`. Site image `v0.3.2`, Painel `ads4pros-api:newclient-202607121910`.
 **Última atualização:** 2026-07-12
 
-> **Iterações pós-deploy (2026-07-12, tudo em prod e verificado):** (1) redirect `/new-client` → `/new-client/pt-br` (URL curta sem idioma dava 404); (2) **fix Dockerfile.web: `COPY public/`** — standalone não inclui `public/` e o MVP tinha removido o COPY, então os logos davam 404 em prod; agora os 5 assets servem 200; (3) logos reais dos 5 brands (`public/logos/*.png`, hero HOPE + Edifica/V4/Micro Investors/ADS4Pros) via `next/image` + `images.unoptimized`; (4) campo "Endereço completo" removido do wizard — endereço só nos campos separados (`address_full` segue auto-composto no `buildPayload`). Commits `193559c`, `2ffc8aa` (pushados).
+> **Iterações pós-deploy (2026-07-12, tudo em prod e verificado):** (1) redirect `/new-client` → `/new-client/pt-br` (URL curta sem idioma dava 404); (2) **fix Dockerfile.web: `COPY public/`** — standalone não inclui `public/` e o MVP tinha removido o COPY, então os logos davam 404 em prod; agora os 5 assets servem 200; (3) logos reais dos 5 brands (`public/logos/*.png`, hero HOPE + Edifica/V4/Micro Investors/ADS4Pros) via `next/image` + `images.unoptimized`; (4) campo "Endereço completo" removido do wizard — endereço só nos campos separados (`address_full` segue auto-composto no `buildPayload`); (5) **data de nascimento no formato do país** (BR `DD/MM/AAAA`, US `MM/DD/YYYY`) via campo mascarado — `<input type=date>` seguia o locale do browser; converte pra ISO no submit; (6) **CTAs dos produtos** apontam pras plataformas (Tasks/Coach/Tickets `*.plexco.com.br`, Família `familiamilionaria.app`) + **novo produto GHL-Gowa Adapter** (categoria integração, agora 9 produtos). Site prod `v0.3.3`. Commits site `193559c`,`2ffc8aa`,`a2509f6`,`d337a7c` (pushados).
+>
+> **GOWA ATIVADO (2026-07-12, verificado E2E):** o side-effect WhatsApp do `/public/new-client` está **funcionando em prod**. GOWA é self-hosted no VPS (serviço `gowa_whatsapp`, `gowa-operator` — multi-device) em `https://gowa.huboperacional.com.br`, device **`Notificador`** (jid 5567920015872). `gowaClient` manda header `X-Device-Id`; `_waPhone` normaliza BR (prepend 55). Painel prod `ads4pros-api:gowa-fix-*`, commits `cb9acfb`,`34e74da` (pushados). **⚠️ As 3 env vars (`GOWA_SEND_URL`,`GOWA_BASIC_AUTH`,`GOWA_DEVICE_ID`) foram setadas via `docker service update --env-add`** — persistem em `service update --image`, mas **um `docker stack deploy` do Portainer/compose SEM elas no arquivo as apaga.** Adicionar ao stack canônico do `ads4pros-api` pra não perder.
 **Canon Percus:** v6.26.1 (ver `.percus-version`; canônica atual 6.28.0 — divergente, considerar REORGANIZAR antes de trabalho grande).
 **Repo:** `github.com/huboperacional/huboperacional-site` (público, branch `main`, tags `v0.1.0` + `v0.1.1`; imagem prod `v0.3.0`).
 **Último commit:** `d9799c8 feat(new-client): wizard bilingue …` (pushado).
@@ -23,8 +25,8 @@
   - 3 integrações (`gowaClient`/`googleSheets`/`ghlClient`) codadas **flag-gated pela cred** — inativas até o `.env` do Painel receber as creds. Não quebram o cadastro (best-effort try/except).
 - **SEO v0.2 `[4-C]`:** o deploy `v0.3.0` shippou também o código SEO (Organization+Breadcrumb JSON-LD, Twitter cards, sitemap lastmod) — **agora está em prod mas os meta-tags específicos NÃO foram smoke-testados** nesta sessão. Próximo: `curl` + inspeção → mover pra `[5-T]`.
 - **Quebrado / regressão:** nenhum (smoke: /, /produtos, /afiliados, /contato, /sobre, /sitemap.xml todos 200). ⚠️ Build local exige `NODE_ENV=production npm run build` (ver CLAUDE.md / memória).
-- **⚠️ BLOQUEIO pro operador — ativar os 3 side-effects:** pôr no `.env` do Painel: `gowa_send_url` (+ confirmar formato do endpoint GOWA) · `google_sa_json` (service-account + compartilhar planilha V4 edit) · `ghl_token` (+ mapear `ghl_pipeline_id`/`ghl_stage_id` do "01 Marketing Pipeline" via `GET /opportunities/pipelines?locationId=ElbRWEbPclFoAfVW9bm0`). Defaults já no config: `google_sheet_id` (V4) + `ghl_location_id`. Sem isso, persistência + atribuição funcionam; os 3 side-effects logam skip.
-- **Próximo passo imediato (retomada):** (1) operador preenche as 3 creds no `.env` do Painel → reativar side-effects (GOWA/Sheets/GHL) e verificar cada um; (2) smoke dos meta-tags SEO em prod → `[5-T]`; (3) considerar tag git `v0.3.2`. (Logos reais ✅ já em prod.)
+- **⚠️ BLOQUEIO pro operador — faltam 2 side-effects (GOWA já ativo):** pôr no `.env`/service do Painel: `google_sa_json` (service-account Google + compartilhar planilha V4 edit) · `ghl_token` (+ mapear `ghl_pipeline_id`/`ghl_stage_id` do "01 Marketing Pipeline" via `GET /opportunities/pipelines?locationId=ElbRWEbPclFoAfVW9bm0`). Defaults já no config: `google_sheet_id` (V4) + `ghl_location_id`. Sem isso, persistência + atribuição + WhatsApp (GOWA) funcionam; Sheets/GHL logam skip. **Obs:** o token GHL provavelmente é descobrível no VPS (`ghlgowa_adapter`/`ghlevo_adapter` têm creds GHL) — checar antes de pedir ao operador.
+- **Próximo passo imediato (retomada):** (1) ativar Sheets (Google SA) + GHL (token) → verificar cada um; (2) smoke dos meta-tags SEO em prod → `[5-T]`; (3) persistir as env vars GOWA no stack canônico do `ads4pros-api` (ver aviso acima); (4) considerar tag git `v0.3.3`. (Logos, GOWA, formato de data, CTAs dos produtos ✅ já em prod.)
 
 ## Status de Features
 
@@ -40,7 +42,8 @@
 | v0.2 Qualidade | Playwright E2E | `[0]` | Estratégia de mock (submit real = risco) |
 | v0.2 Conteúdo | Conteúdo definitivo dos 8 produtos | `[0]` 🎨? | Curadoria do operador |
 | **v0.3 /new-client** | Wizard bilíngue + endpoint Painel + atribuição afiliado | `[5-T]` ✓ | Em prod (v0.3.0). Falta: logos reais (operador) |
-| **v0.3 /new-client** | Side-effects GOWA / Sheets / GHL | `[4-C]` | Codado flag-gated. **BLOQUEADO** — 3 creds ausentes no `.env` do Painel |
+| **v0.3 /new-client** | Side-effect GOWA (WhatsApp) | `[5-T]` ✓ | Em prod (device Notificador). Verificado E2E |
+| **v0.3 /new-client** | Side-effects Sheets / GHL | `[4-C]` | Codado flag-gated. **BLOQUEADO** — creds ausentes (Google SA + token GHL) |
 
 ## O que está no ar
 
