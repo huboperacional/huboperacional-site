@@ -17,6 +17,30 @@ export type AffiliatePayload = {
   whatsapp: string;
 };
 
+export type NewClientPayload = {
+  country: 'BR' | 'US';
+  company_name: string;
+  tax_id: string;
+  tax_regime?: string;
+  address_full?: string;
+  street?: string;
+  complement?: string;
+  city?: string;
+  state?: string;
+  zip?: string;
+  owner_name: string;
+  owner_email: string;
+  owner_phone: string;
+  owner_birthdate?: string; // ISO YYYY-MM-DD
+  fin_is_owner: boolean;
+  fin_name?: string;
+  fin_whatsapp?: string;
+  fin_email?: string;
+  payment_method: 'credit_card' | 'boleto_pix' | 'bank_transfer';
+  lang: 'pt-br' | 'en';
+  ref_code?: string;
+};
+
 export type ApiResult<T = Record<string, unknown>> =
   | { ok: true; data: T }
   | { ok: false; error: string; status?: number };
@@ -62,4 +86,13 @@ export async function submitLead(payload: LeadPayload): Promise<ApiResult<{ lead
 export async function submitAffiliate(payload: AffiliatePayload): Promise<ApiResult<{ ref_code: string; status: string }>> {
   const tracking = getAttribution() ?? {};
   return postJson('/public/affiliate-signup', { ...payload, tracking });
+}
+
+export async function submitNewClient(payload: NewClientPayload): Promise<ApiResult<{ id: string }>> {
+  const tracking = getAttribution() ?? {};
+  // Drop empty-string optionals so the backend (Pydantic extra='forbid') gets clean nulls.
+  const clean = Object.fromEntries(
+    Object.entries(payload).filter(([, v]) => v !== '' && v !== undefined),
+  );
+  return postJson('/public/new-client', { ...clean, tracking });
 }
