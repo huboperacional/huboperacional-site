@@ -32,8 +32,8 @@ export const PRODUCTS: Product[] = [
       'Dashboard web com gastos por categoria + metas',
       'Lembretes proativos de contas a pagar',
     ],
-    updatedAt: '2026-05-17',
-    cta: { label: 'Conhecer a plataforma', url: 'https://familiamilionaria.com.br' },
+    updatedAt: '2026-07-12',
+    cta: { label: 'Conhecer a plataforma', url: 'https://familiamilionaria.app' },
   },
   {
     slug: 'robo-vendas',
@@ -91,6 +91,24 @@ export const PRODUCTS: Product[] = [
     cta: { label: 'Documentacao API', url: '/contato?produto=ghl-evolution' },
   },
   {
+    slug: 'ghl-gowa',
+    title: 'GHL-Gowa Adapter',
+    tagline: 'Ponte entre GoHighLevel e GOWA (WhatsApp multi-device)',
+    icon: 'plug-zap',
+    category: 'integracao',
+    status: 'producao',
+    description:
+      'Adapter que faz a ponte entre GoHighLevel (GHL) e o GOWA (WhatsApp multi-device): traduz webhooks dos dois lados, resolve JID/numero (inclusive o 9o digito brasileiro), roteia envios por device nomeado e mapeia mensagens/contatos GHL <-> WhatsApp. Backend-only — API REST pra consumir.',
+    features: [
+      'Multi-device: roteia cada envio por um device nomeado (header X-Device-Id)',
+      'Resolucao de JID/numero BR (toggle automatico do 9o digito)',
+      'Mapeamento bidirecional de mensagens GHL <-> WhatsApp',
+      'Webhooks GHL + GOWA traduzidos nos dois sentidos',
+    ],
+    updatedAt: '2026-07-12',
+    cta: { label: 'Documentacao API', url: '/contato?produto=ghl-gowa' },
+  },
+  {
     slug: 'paid-midia-automation',
     title: 'Paid Midia Automation',
     tagline: 'Plataforma de agencia pra Meta Ads + Google Ads',
@@ -123,8 +141,8 @@ export const PRODUCTS: Product[] = [
       'WhatsApp bidirecional pra criar/atualizar tarefas',
       'Multi-tenant com workspaces isolados',
     ],
-    updatedAt: '2026-05-17',
-    cta: { label: 'Conhecer a plataforma', url: '/contato?produto=plexco-tasks' },
+    updatedAt: '2026-07-12',
+    cta: { label: 'Conhecer a plataforma', url: 'https://tasks.plexco.com.br' },
   },
   {
     slug: 'plexco-coach',
@@ -141,8 +159,8 @@ export const PRODUCTS: Product[] = [
       'Lembretes WhatsApp pros clientes',
       'Material complementar versionado por cliente',
     ],
-    updatedAt: '2026-05-17',
-    cta: { label: 'Falar com o time', url: '/contato?produto=plexco-coach' },
+    updatedAt: '2026-07-12',
+    cta: { label: 'Conhecer a plataforma', url: 'https://coach.plexco.com.br' },
   },
   {
     slug: 'plexco-tickets',
@@ -159,8 +177,8 @@ export const PRODUCTS: Product[] = [
       'WhatsApp bidirecional pra cliente',
       'Base de conhecimento integrada',
     ],
-    updatedAt: '2026-05-17',
-    cta: { label: 'Notifique-me no lancamento', url: '/contato?produto=plexco-tickets' },
+    updatedAt: '2026-07-12',
+    cta: { label: 'Conhecer a plataforma', url: 'https://tickets.plexco.com.br' },
   },
 ];
 
