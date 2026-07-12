@@ -1,26 +1,28 @@
 # HANDOFF — huboperacional-site
 
-**Status:** ✅ MVP v0.1.1 em produção em `https://huboperacional.com.br` (Eixo D / Fase 6 do plano mestre Percus — 100% concluído).
-**Última atualização:** 2026-06-30
-**Canon Percus:** v6.26.1 (ver `.percus-version`). Tracking files + diretivas adotadas em 2026-06-30.
-**Repo:** `github.com/huboperacional/huboperacional-site` (público, branch `main`, tags `v0.1.0` + `v0.1.1`).
-**Último commit:** `c63ca84 docs(tracking): frente Qualidade [5-T] no PLANO` (local; push só ≥01/07).
+**Status:** ✅ MVP v0.1.1 + **v0.3 `/new-client`** em produção em `https://huboperacional.com.br`. Site image `v0.3.0`, Painel `ads4pros-api:newclient-202607121910`.
+**Última atualização:** 2026-07-12
+**Canon Percus:** v6.26.1 (ver `.percus-version`; canônica atual 6.28.0 — divergente, considerar REORGANIZAR antes de trabalho grande).
+**Repo:** `github.com/huboperacional/huboperacional-site` (público, branch `main`, tags `v0.1.0` + `v0.1.1`; imagem prod `v0.3.0`).
+**Último commit:** `d9799c8 feat(new-client): wizard bilingue …` (pushado).
 
 ---
 
-## ⚠️ Push pendente
+## ✅ Push feito (hold 01/07 expirou)
 
-**10+ commits locais na `main` ainda NÃO pushados** (operador pediu: sem push antes de 01/07). Inclui: adoção do canon, fix do catalog (description), frente SEO (3 commits), frente Qualidade, e os docs de planejamento da v0.3 `/new-client`. A partir de 01/07: `git push` + considerar tag nova. **Também há 1 commit local no repo do Painel** (`13cc94f` fix do catalog ingest — já deployado em prod, mas não pushado).
+**2026-07-12:** ambos os repos pushados. Site `main` → `d9799c8` (13 commits: canon, fix catalog, SEO v0.2 `[4-C]`, Qualidade, docs v0.3, + a feature v0.3). Painel `main` → `170e60a` (endpoint `/public/new-client` + integrações). Considerar criar tag `v0.3.0` no git do site (imagem já é v0.3.0).
 
 ## Estado atual
 
-- **Funcionando end-to-end (verificado em prod):** 6 páginas + 2 forms + tracking 15 campos + sitemap/robots. MVP v0.1.1 no ar.
-- **Implementado nesta sessão (verificado LOCAL, falta prod):** SEO — Organization + BreadcrumbList JSON-LD, Twitter cards, sitemap lastmod curado (`[4-C]`). Qualidade — Vitest + jsdom + 16 unit tests verdes (`[5-T]`).
-- **Quebrado / regressão:** nenhum. ⚠️ Build local exige `NODE_ENV=production npm run build` (settings.json seta development e quebra prerender /404 — ver CLAUDE.md / memória).
-- **Último passo concluído:** planejamento da feature **v0.3 `/new-client`** (brainstorming/plan mode → spec aprovada em `docs/superpowers/specs/2026-06-30-new-client-wizard-design.md`). Checkpoint pra `/clear`. **Nenhum código da feature escrito ainda.**
-- **Próximo passo imediato (retomada):** ler a spec `docs/superpowers/specs/2026-06-30-new-client-wizard-design.md` e implementar na ordem: (1) `migration_client_onboarding.sql` no Painel; (2) endpoint `POST /public/new-client` (Pydantic `extra='forbid'` + persistência + `_findAffiliate`); (3) clientes de integração `gowaClient`/`googleSheets`/`ghlClient` atrás de flag de cred; (4) wizard frontend `app/new-client/[lang]/page.tsx` + i18n + `submitNewClient`; (5) logos. Sem push antes de 01/07.
-- **⚠️ BLOQUEIO pro operador destravar antes de ativar Sheets/GHL/GOWA:** o `.env` do Painel **NÃO tem** service-account Google (só Gemini), **NÃO tem** token GHL (só a Location ID `ElbRWEbPclFoAfVW9bm0` dada no chat), e o GOWA tem só basic-auth+webhook (**falta a URL de envio**; hoje o Painel ainda manda WhatsApp por Evolution). Fornecer essas 3 creds no `.env` do Painel.
-- **Frentes v0.2 pendentes:** push ≥01/07 → deploy (R24) → SEO `[4-C]`→`[5-T]`; OG por produto / Pixels / Conteúdo dependem de input do operador.
+- **Funcionando end-to-end (verificado em prod):** 6 páginas + 2 forms + tracking 15 campos + sitemap/robots (MVP v0.1.1) **+ wizard `/new-client/[lang]` (pt-br/en) + endpoint `POST /public/new-client`** (v0.3).
+- **Implementado nesta sessão (2026-07-12) — v0.3 `/new-client`, deployado e verificado E2E em prod:**
+  - Wizard bilíngue (welcome→país→empresa→responsável→financeiro→obrigado): dirigido no browser nos 2 idiomas (validação por etapa, financeiro condicional, pagamento BR=cartão/boleto-pix vs US=cartão/bank-transfer, regime só BR, sem erro no console) + prod HTTP 200 + conteúdo confirmado. `/new-client/fr` → 404 (dynamicParams=false).
+  - Endpoint Painel: migration `client_onboarding` aplicada em `ads4pros_affiliate`; smoke prod = 422 em campo extra (`extra='forbid'`), 201 `{ok,id}`, row persistida com `affiliate_id` resolvido do `ref_code` real `vinicius-almeida-90f9` (test row deletado).
+  - 3 integrações (`gowaClient`/`googleSheets`/`ghlClient`) codadas **flag-gated pela cred** — inativas até o `.env` do Painel receber as creds. Não quebram o cadastro (best-effort try/except).
+- **SEO v0.2 `[4-C]`:** o deploy `v0.3.0` shippou também o código SEO (Organization+Breadcrumb JSON-LD, Twitter cards, sitemap lastmod) — **agora está em prod mas os meta-tags específicos NÃO foram smoke-testados** nesta sessão. Próximo: `curl` + inspeção → mover pra `[5-T]`.
+- **Quebrado / regressão:** nenhum (smoke: /, /produtos, /afiliados, /contato, /sobre, /sitemap.xml todos 200). ⚠️ Build local exige `NODE_ENV=production npm run build` (ver CLAUDE.md / memória).
+- **⚠️ BLOQUEIO pro operador — ativar os 3 side-effects:** pôr no `.env` do Painel: `gowa_send_url` (+ confirmar formato do endpoint GOWA) · `google_sa_json` (service-account + compartilhar planilha V4 edit) · `ghl_token` (+ mapear `ghl_pipeline_id`/`ghl_stage_id` do "01 Marketing Pipeline" via `GET /opportunities/pipelines?locationId=ElbRWEbPclFoAfVW9bm0`). Defaults já no config: `google_sheet_id` (V4) + `ghl_location_id`. Sem isso, persistência + atribuição funcionam; os 3 side-effects logam skip.
+- **Próximo passo imediato (retomada):** (1) operador fornece logos → trocar placeholders textuais por `<Image>` (`public/logos/README.md`); (2) operador preenche as 3 creds → reativar side-effects e verificar cada um; (3) smoke dos meta-tags SEO em prod → `[5-T]`; (4) considerar tag git `v0.3.0`.
 
 ## Status de Features
 
@@ -29,14 +31,14 @@
 | Frente | Feature | Status | Próxima etapa |
 |--------|---------|--------|---------------|
 | MVP v0.1 | 6 páginas + 2 forms + tracking + sitemap | `[5-T]` ✓ | — (em produção) |
-| v0.2 SEO | Organization+Breadcrumb JSON-LD, Twitter cards, sitemap lastmod | `[4-C]` | Deploy + verificar prod → `[5-T]` |
+| v0.2 SEO | Organization+Breadcrumb JSON-LD, Twitter cards, sitemap lastmod | `[4-C]` | **Deployado (v0.3.0)** — smoke dos meta-tags em prod → `[5-T]` |
 | v0.2 SEO | OG por produto (next/og per-page) | `[0]` | Gate de design R10 (mockup) |
 | v0.2 SEO | Pixels Meta + Google Ads | `[0]` | Operador: IDs + decisão LGPD |
 | v0.2 Qualidade | Vitest unit (structured-data, tracking, api) | `[5-T]` | — (16 testes verdes) |
 | v0.2 Qualidade | Playwright E2E | `[0]` | Estratégia de mock (submit real = risco) |
 | v0.2 Conteúdo | Conteúdo definitivo dos 8 produtos | `[0]` 🎨? | Curadoria do operador |
-| **v0.3 /new-client** | Wizard bilíngue + endpoint Painel + atribuição afiliado | `[0]` | **Implementar** (spec aprovada) |
-| **v0.3 /new-client** | Side-effects GOWA / Sheets / GHL | `[0]` | **BLOQUEADO** — creds ausentes no `.env` do Painel |
+| **v0.3 /new-client** | Wizard bilíngue + endpoint Painel + atribuição afiliado | `[5-T]` ✓ | Em prod (v0.3.0). Falta: logos reais (operador) |
+| **v0.3 /new-client** | Side-effects GOWA / Sheets / GHL | `[4-C]` | Codado flag-gated. **BLOQUEADO** — 3 creds ausentes no `.env` do Painel |
 
 ## O que está no ar
 
