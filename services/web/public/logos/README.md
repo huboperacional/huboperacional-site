@@ -1,17 +1,19 @@
 # Logos — página /new-client (welcome)
 
-O wizard `app/new-client/[lang]` mostra 4 marcas na tela de boas-vindas. Enquanto os
-arquivos não chegam, `components/NewClientWizard.tsx` (`WelcomeStep`) renderiza
-**placeholders textuais** — nenhum `<img>` aponta pra cá ainda, então não há 404.
+Arquivos reais fornecidos pelo operador (2026-07-12) e usados na tela de boas-vindas
+do wizard `app/new-client/[lang]` (`WelcomeStep` em `components/NewClientWizard.tsx`).
 
-Quando o operador fornecer os arquivos, colocar aqui (SVG preferido, ou PNG com fundo
-transparente) e trocar os placeholders textuais por `<Image>`/`<img>`:
+| Marca            | Arquivo               | Uso                                  |
+|------------------|-----------------------|--------------------------------------|
+| Hub Operacional  | `hub-operacional.png` | logo principal (HOPE — hero, topo)   |
+| Edifica Express  | `edifica-express.png` | linha de marcas (secundária)         |
+| V4 Company       | `v4-company.png`      | linha de marcas (secundária)         |
+| Micro Investors  | `micro-investors.png` | linha de marcas (secundária)         |
 
-| Marca            | Arquivo esperado            | Uso na tela                        |
-|------------------|-----------------------------|------------------------------------|
-| Hub Operacional  | `hub-operacional.svg`       | logo principal (topo, destaque)    |
-| Edifica Express  | `edifica-express.svg`       | linha de marcas (secundária)       |
-| V4 Company       | `v4-company.svg`            | linha de marcas (secundária)       |
-| Micro Investors  | `micro-investors.svg`       | linha de marcas (secundária)       |
+Ordem e caminhos vêm de `WELCOME_BRANDS` em `services/web/lib/new-client-i18n.ts`
+(primeiro item = hero). Renderizados via `next/image` com `images.unoptimized`
+(runtime standalone `node:20-slim` não tem sharp). Para trocar um logo: substituir o
+PNG mantendo o nome, ou editar `WELCOME_BRANDS`.
 
-Ordem e rótulos vêm de `WELCOME_BRANDS` em `services/web/lib/new-client-i18n.ts`.
+> Nota: `Logo Hope Transparente.png` (nome original) = a marca **HOPE / Hub Operacional** —
+> renomeado para `hub-operacional.png`.

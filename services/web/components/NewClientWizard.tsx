@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { submitNewClient, type NewClientPayload } from '@/lib/api';
 import {
@@ -387,17 +388,37 @@ function WelcomeStep({ dict, onStart }: { dict: NewClientDict; onStart: () => vo
   const [hero, ...rest] = WELCOME_BRANDS;
   return (
     <div className="text-center">
-      {/* Textual logo placeholders until operator provides public/logos/*. */}
-      <div className="text-2xl font-bold tracking-tight text-brand-600 mb-2">{hero}</div>
+      {/* Hero brand logo (Hub Operacional / HOPE) */}
+      <div className="flex justify-center mb-6">
+        <Image
+          src={hero.src}
+          alt={hero.name}
+          width={0}
+          height={0}
+          sizes="200px"
+          priority
+          className="h-16 w-auto object-contain"
+        />
+      </div>
       <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">{dict.welcome.title}</h1>
       <p className="text-steel-700 max-w-prose mx-auto mb-8">{dict.welcome.subtitle}</p>
       <div className="mb-10">
-        <div className="font-mono text-xs text-steel-500 uppercase tracking-wider mb-3">{dict.welcome.brandsLabel}</div>
-        <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm font-medium text-steel-700">
+        <div className="font-mono text-xs text-steel-500 uppercase tracking-wider mb-4">{dict.welcome.brandsLabel}</div>
+        <div className="flex flex-wrap items-center justify-center gap-4">
           {rest.map((b) => (
-            <span key={b} className="px-3 py-1 bg-white border border-paper-3 rounded-full">
-              {b}
-            </span>
+            <div
+              key={b.name}
+              className="flex items-center justify-center h-16 w-36 px-4 bg-white border border-paper-3 rounded-xl"
+            >
+              <Image
+                src={b.src}
+                alt={b.name}
+                width={0}
+                height={0}
+                sizes="144px"
+                className="max-h-10 w-auto object-contain"
+              />
+            </div>
           ))}
         </div>
       </div>

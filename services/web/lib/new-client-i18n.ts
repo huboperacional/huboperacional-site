@@ -227,6 +227,12 @@ export function paymentMethodsFor(country: 'BR' | 'US'): PaymentMethod[] {
   return country === 'BR' ? ['credit_card', 'boleto_pix'] : ['credit_card', 'bank_transfer'];
 }
 
-// The four brand logos shown on the welcome page (files provided by the operator;
-// textual placeholder until they land in public/logos/).
-export const WELCOME_BRANDS = ['Hub Operacional', 'Edifica Express', 'V4 Company', 'Micro Investors'];
+// The four brand logos shown on the welcome page. First entry is the hero
+// (Hub Operacional / HOPE); the rest render side by side below it.
+export type BrandLogo = { name: string; src: string };
+export const WELCOME_BRANDS: BrandLogo[] = [
+  { name: 'Hub Operacional', src: '/logos/hub-operacional.png' },
+  { name: 'Edifica Express', src: '/logos/edifica-express.png' },
+  { name: 'V4 Company', src: '/logos/v4-company.png' },
+  { name: 'Micro Investors', src: '/logos/micro-investors.png' },
+];
