@@ -10,15 +10,17 @@
 
 ## ⚠️ Push pendente
 
-**9+ commits locais na `main` ainda NÃO pushados** (operador pediu: sem push antes de 01/07). Inclui: adoção do canon, fix do catalog (description), frente SEO (3 commits), frente Qualidade. A partir de 01/07: `git push` + considerar tag nova. **Também há 1 commit local no repo do Painel** (`13cc94f` fix do catalog ingest — já deployado em prod, mas não pushado).
+**10+ commits locais na `main` ainda NÃO pushados** (operador pediu: sem push antes de 01/07). Inclui: adoção do canon, fix do catalog (description), frente SEO (3 commits), frente Qualidade, e os docs de planejamento da v0.3 `/new-client`. A partir de 01/07: `git push` + considerar tag nova. **Também há 1 commit local no repo do Painel** (`13cc94f` fix do catalog ingest — já deployado em prod, mas não pushado).
 
 ## Estado atual
 
 - **Funcionando end-to-end (verificado em prod):** 6 páginas + 2 forms + tracking 15 campos + sitemap/robots. MVP v0.1.1 no ar.
 - **Implementado nesta sessão (verificado LOCAL, falta prod):** SEO — Organization + BreadcrumbList JSON-LD, Twitter cards, sitemap lastmod curado (`[4-C]`). Qualidade — Vitest + jsdom + 16 unit tests verdes (`[5-T]`).
 - **Quebrado / regressão:** nenhum. ⚠️ Build local exige `NODE_ENV=production npm run build` (settings.json seta development e quebra prerender /404 — ver CLAUDE.md / memória).
-- **Último passo concluído:** frente Qualidade (Vitest) — 16 testes verdes, commits `ebdb5e8`/`3f57122`/`c63ca84`.
-- **Próximo passo imediato:** a partir de 01/07 fazer push; depois deploy (R24) e re-verificar SEO em prod (curl + Schema Validator) → subir SEO de `[4-C]` pra `[5-T]`. Frentes v0.2 restantes (OG por produto, Pixels, Conteúdo) **dependem de input do operador** (design/IDs/textos).
+- **Último passo concluído:** planejamento da feature **v0.3 `/new-client`** (brainstorming/plan mode → spec aprovada em `docs/superpowers/specs/2026-06-30-new-client-wizard-design.md`). Checkpoint pra `/clear`. **Nenhum código da feature escrito ainda.**
+- **Próximo passo imediato (retomada):** ler a spec `docs/superpowers/specs/2026-06-30-new-client-wizard-design.md` e implementar na ordem: (1) `migration_client_onboarding.sql` no Painel; (2) endpoint `POST /public/new-client` (Pydantic `extra='forbid'` + persistência + `_findAffiliate`); (3) clientes de integração `gowaClient`/`googleSheets`/`ghlClient` atrás de flag de cred; (4) wizard frontend `app/new-client/[lang]/page.tsx` + i18n + `submitNewClient`; (5) logos. Sem push antes de 01/07.
+- **⚠️ BLOQUEIO pro operador destravar antes de ativar Sheets/GHL/GOWA:** o `.env` do Painel **NÃO tem** service-account Google (só Gemini), **NÃO tem** token GHL (só a Location ID `ElbRWEbPclFoAfVW9bm0` dada no chat), e o GOWA tem só basic-auth+webhook (**falta a URL de envio**; hoje o Painel ainda manda WhatsApp por Evolution). Fornecer essas 3 creds no `.env` do Painel.
+- **Frentes v0.2 pendentes:** push ≥01/07 → deploy (R24) → SEO `[4-C]`→`[5-T]`; OG por produto / Pixels / Conteúdo dependem de input do operador.
 
 ## Status de Features
 
@@ -33,6 +35,8 @@
 | v0.2 Qualidade | Vitest unit (structured-data, tracking, api) | `[5-T]` | — (16 testes verdes) |
 | v0.2 Qualidade | Playwright E2E | `[0]` | Estratégia de mock (submit real = risco) |
 | v0.2 Conteúdo | Conteúdo definitivo dos 8 produtos | `[0]` 🎨? | Curadoria do operador |
+| **v0.3 /new-client** | Wizard bilíngue + endpoint Painel + atribuição afiliado | `[0]` | **Implementar** (spec aprovada) |
+| **v0.3 /new-client** | Side-effects GOWA / Sheets / GHL | `[0]` | **BLOQUEADO** — creds ausentes no `.env` do Painel |
 
 ## O que está no ar
 

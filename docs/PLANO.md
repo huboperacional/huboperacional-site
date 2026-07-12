@@ -60,8 +60,19 @@ Entregue 2026-05-17, v0.1.1 em 2026-05-17. Tudo verificado em prod (`https://hub
 
 ---
 
+## Frente: v0.3 — Cadastro de Cliente (`/new-client`)
+
+> **NÃO iniciado.** Spec aprovada 2026-06-30: `docs/superpowers/specs/2026-06-30-new-client-wizard-design.md`. Feature grande cross-repo (site + Painel). Design usa o design system atual (exceção R10 declarada). Sem push antes de 01/07.
+
+- `[0]` 🎨? Wizard bilíngue `/new-client/[lang]` (pt-br/en) — 5 páginas + obrigado, i18n por dicionário, captura `?ref=` + campo oculto. Logos: **operador fornece os arquivos**.
+- `[0]` Backend `POST /public/new-client` no Painel — Pydantic `extra='forbid'` + rate-limit + tabela `client_onboarding` + atribuição de afiliado (`_findAffiliate`, sem comissão).
+- `[0]` Side-effect WhatsApp via **GOWA** (responsável + admin) — **BLOQUEADO:** falta URL de envio do GOWA no `.env` (só há webhook; não há cliente no código; hoje ainda é Evolution).
+- `[0]` Side-effect append na planilha **"V4 Clientes"** — **BLOQUEADO:** service-account Google ausente no `.env`.
+- `[0]` Side-effect registro no **GHL** ("01 Marketing Pipeline", Location `ElbRWEbPclFoAfVW9bm0`) — **BLOQUEADO:** token GHL ausente no `.env`.
+
 ## Histórico (changelog do plano em si)
 
 - **2026-06-30** — Criação do PLANO ao trazer o projeto pro canon Percus v6.26.1 (umbrella REORGANIZAR_PROJETO). MVP v0.1.1 registrado como `[5-T]`; backlog v0.2 do HANDOFF formalizado como frentes `[0]`.
 - **2026-06-30** — Frente SEO & Tracking: Schema.org Org+BreadcrumbList, Twitter cards e sitemap lastmod implementados e verificados em build → `[4-C]` (prod pendente, deploy é cadência R24 + sem push antes de 01/07). Commits `e68215c`, `17e4919`, `547403f`.
 - **2026-06-30** — Frente Qualidade: Vitest + jsdom + 16 unit tests (structured-data, tracking, api) verdes → `[5-T]`. Playwright deferido (risco de submit real). Build de produção segue OK com os `.test.ts`.
+- **2026-06-30** — Adicionada Frente v0.3 "Cadastro de Cliente (/new-client)" após brainstorming/plan mode. Spec aprovada. Feature cross-repo grande, NÃO iniciada. 3 side-effects (GOWA/Sheets/GHL) bloqueados por creds ausentes no `.env` do Painel.
