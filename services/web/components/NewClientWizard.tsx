@@ -256,12 +256,6 @@ export function NewClientWizard({ lang, dict }: { lang: Lang; dict: NewClientDic
               mono
               required
             />
-            <TextField
-              label={dict.company.addressFull}
-              value={data.address_full}
-              onChange={(v) => set('address_full', v)}
-              optional={dict.common.optional}
-            />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <TextField label={dict.company.street} value={data.street} onChange={(v) => set('street', v)} optional={dict.common.optional} />
               <TextField label={dict.company.complement} value={data.complement} onChange={(v) => set('complement', v)} optional={dict.common.optional} />

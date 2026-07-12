@@ -32,7 +32,6 @@ export type NewClientDict = {
     title: string;
     companyName: string;
     taxId: string; // resolved by country before render
-    addressFull: string;
     street: string;
     complement: string;
     city: string;
@@ -91,7 +90,6 @@ const PT: NewClientDict = {
     title: 'Dados da empresa',
     companyName: 'Nome da empresa',
     taxId: 'CNPJ',
-    addressFull: 'Endereço completo',
     street: 'Rua / Logradouro',
     complement: 'Complemento',
     city: 'Cidade',
@@ -170,7 +168,6 @@ const EN: NewClientDict = {
     title: 'Company details',
     companyName: 'Company name',
     taxId: 'EIN',
-    addressFull: 'Full address',
     street: 'Street',
     complement: 'Suite / Unit',
     city: 'City',
@@ -235,4 +232,5 @@ export const WELCOME_BRANDS: BrandLogo[] = [
   { name: 'Edifica Express', src: '/logos/edifica-express.png' },
   { name: 'V4 Company', src: '/logos/v4-company.png' },
   { name: 'Micro Investors', src: '/logos/micro-investors.png' },
+  { name: 'ADS4Pros', src: '/logos/ads4pros.png' },
 ];
