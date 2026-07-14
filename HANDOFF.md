@@ -26,10 +26,11 @@
 - **SEO v0.2 `[4-C]`:** o deploy `v0.3.0` shippou também o código SEO (Organization+Breadcrumb JSON-LD, Twitter cards, sitemap lastmod) — **agora está em prod mas os meta-tags específicos NÃO foram smoke-testados** nesta sessão. Próximo: `curl` + inspeção → mover pra `[5-T]`.
 - **Quebrado / regressão:** nenhum (smoke: /, /produtos, /afiliados, /contato, /sobre, /sitemap.xml todos 200). ⚠️ Build local exige `NODE_ENV=production npm run build` (ver CLAUDE.md / memória).
 - **⚠️ BLOQUEIO pro operador — Sheets (2 cliques no Google) + GHL:**
-  - **Sheets (quase pronto):** `GOOGLE_SA_JSON` já foi injetada no service `ads4pros-api` reusando o service-account do `plexco_backend` (`plexco-backend-invoker@plexco-media-2026.iam.gserviceaccount.com`, projeto `plexco-media-2026` / número `538510710999`). **Falta 2 ações no Google:** (1) **habilitar a Sheets API** no projeto `538510710999` (`https://console.developers.google.com/apis/api/sheets.googleapis.com/overview?project=538510710999`) — hoje dá 403 "Sheets API disabled"; (2) **compartilhar a planilha V4** (`1rGtbHa-sq0I1qUzVxIF5c1Y-yR5Nq37viDgoSCNmbDg`) como **Editor** com aquele e-mail. Feito isso, funciona sem redeploy. *Alternativa:* trocar `GOOGLE_SA_JSON` por um SA dedicado com Sheets API já habilitada. (Tab default `V4 Clientes` — conferir nome real da aba.)
-  - **GHL:** falta `ghl_token` + mapear `ghl_pipeline_id`/`ghl_stage_id` do "01 Marketing Pipeline" (`GET /opportunities/pipelines?locationId=ElbRWEbPclFoAfVW9bm0`). **Token provavelmente descobrível no VPS** — `ghlgowa_adapter`/`ghlevo_adapter` têm creds GHL; checar antes de pedir ao operador.
-  - Sem essas: persistência + atribuição + **WhatsApp (GOWA)** funcionam; Sheets/GHL logam skip.
-- **Próximo passo imediato (retomada):** (1) ativar Sheets (Google SA) + GHL (token) → verificar cada um; (2) smoke dos meta-tags SEO em prod → `[5-T]`; (3) persistir as env vars GOWA no stack canônico do `ads4pros-api` (ver aviso acima); (4) considerar tag git `v0.3.3`. (Logos, GOWA, formato de data, CTAs dos produtos ✅ já em prod.)
+  - **Sheets ✅ RESOLVIDO (2026-07-13):** operador habilitou a Sheets API (projeto `538510710999`) + compartilhou a planilha V4 (`1rGtbHa-sq0I1qUzVxIF5c1Y-yR5Nq37viDgoSCNmbDg`, aba `V4 Clientes`) como Editor com `plexco-backend-invoker@plexco-media-2026.iam.gserviceaccount.com`. Teste E2E DELETE-ME (`POST /public/new-client`) appendou a linha correta na ordem da spec e foi limpo. Side-effect **ATIVO**. `GOOGLE_SA_JSON` persistido no compose.
+  - **GHL ✅ RESOLVIDO (2026-07-13):** o operador tinha um Private Integration Token (`pit-…`, 40 chars) — mas colado no `.env` errado (raiz do repo do site, `D:\Claud Automations\huboperacional-site\.env`, gitignored/não-commitado ⇒ sem vazamento) e com nomes que o pydantic ignora (`GHL_PRIVATE_TOKEN`/`GHL_SUBACCOUNT_ID` em vez de `GHL_TOKEN`/`GHL_LOCATION_ID`). PIT validado na API (HTTP 200), mapeado pipeline "01 Marketing Pipeline" `blBrCsr8YPOPkDQukiQ6` / stage inicial "New Lead" `c421b90a-2bb0-427a-b353-0e640f77253f`. Injetadas `GHL_TOKEN`/`GHL_LOCATION_ID`/`GHL_PIPELINE_ID`/`GHL_STAGE_ID` via `--env-add` + persistidas no compose. Teste E2E: contato + opportunity criados no pipeline/stage certos (status open), limpos. NÃO usar os adapters OAuth (`ghlgowa`/`ghlevo`) como fonte de token — expiram/rotacionam.
+  - **Os 3 side-effects (GOWA + Sheets + GHL) estão ATIVOS e verificados E2E.** v0.3 /new-client 100% funcional.
+- **✅ Env vars persistidas no stack (2026-07-13):** as 4 (`GOWA_*` + `GOOGLE_SA_JSON`) agora estão no compose autoritativo `/opt/ads4pros-api/docker-compose.api.yml` (bloco `environment:`, single-quoted, JSON compactado). Validado `docker stack config` + round-trip. Backup `.bak.20260713-144216-preSideEffects`. Stack é **CLI-managed (não Portainer)** — deploy via `docker stack deploy -c /opt/ads4pros-api/docker-compose.api.yml ads4pros-api`. Confirmado `GOOGLE_SA_JSON` parseia dentro do container (SA válido).
+- **Próximo passo imediato (retomada):** v0.3 /new-client **100% completa** (núcleo + atribuição + GOWA + Sheets + GHL todos `[5-T]`). Resta só: (1) smoke dos meta-tags SEO em prod → `[5-T]` (frente v0.2, independente); (2) considerar tag git `v0.3.3`; (3) commitar as docs (HANDOFF/PLANO) no próximo checkpoint.
 
 ## Status de Features
 
@@ -38,7 +39,7 @@
 | Frente | Feature | Status | Próxima etapa |
 |--------|---------|--------|---------------|
 | MVP v0.1 | 6 páginas + 2 forms + tracking + sitemap | `[5-T]` ✓ | — (em produção) |
-| v0.2 SEO | Organization+Breadcrumb JSON-LD, Twitter cards, sitemap lastmod | `[4-C]` | **Deployado (v0.3.0)** — smoke dos meta-tags em prod → `[5-T]` |
+| v0.2 SEO | Organization+Breadcrumb JSON-LD, Twitter cards, sitemap lastmod | `[5-T]` ✓ | **Verificado em prod (2026-07-13)** — smoke `curl` OK |
 | v0.2 SEO | OG por produto (next/og per-page) | `[0]` | Gate de design R10 (mockup) |
 | v0.2 SEO | Pixels Meta + Google Ads | `[0]` | Operador: IDs + decisão LGPD |
 | v0.2 Qualidade | Vitest unit (structured-data, tracking, api) | `[5-T]` | — (16 testes verdes) |
@@ -46,7 +47,8 @@
 | v0.2 Conteúdo | Conteúdo definitivo dos 8 produtos | `[0]` 🎨? | Curadoria do operador |
 | **v0.3 /new-client** | Wizard bilíngue + endpoint Painel + atribuição afiliado | `[5-T]` ✓ | Em prod (v0.3.0). Falta: logos reais (operador) |
 | **v0.3 /new-client** | Side-effect GOWA (WhatsApp) | `[5-T]` ✓ | Em prod (device Notificador). Verificado E2E |
-| **v0.3 /new-client** | Side-effects Sheets / GHL | `[4-C]` | Codado flag-gated. **BLOQUEADO** — creds ausentes (Google SA + token GHL) |
+| **v0.3 /new-client** | Side-effect Sheets ("V4 Clientes") | `[5-T]` ✓ | **ATIVO** (2026-07-13) — SA compartilhado + Sheets API on; teste E2E OK |
+| **v0.3 /new-client** | Side-effect GHL ("01 Marketing Pipeline") | `[5-T]` ✓ | **ATIVO** (2026-07-13) — PIT injetado, pipeline/stage mapeados, teste E2E criou contato+opportunity |
 
 ## O que está no ar
 
