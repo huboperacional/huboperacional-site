@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { CookiePrefsLink } from '@/components/CookiePrefsLink';
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -39,9 +40,12 @@ export function Footer() {
         </div>
       </div>
       <div className="border-t border-paper-3">
-        <div className="max-w-6xl mx-auto px-6 py-4 text-xs text-steel-500 flex justify-between">
+        <div className="max-w-6xl mx-auto px-6 py-4 text-xs text-steel-500 flex flex-wrap gap-x-4 gap-y-1 justify-between items-center">
           <span>© {year} Percus — Hub Operacional</span>
-          <span className="font-mono text-[10px]">huboperacional.com.br</span>
+          <div className="flex items-center gap-4">
+            <CookiePrefsLink />
+            <span className="font-mono text-[10px]">huboperacional.com.br</span>
+          </div>
         </div>
       </div>
     </footer>

@@ -9,7 +9,7 @@ O item "Pixel Meta + Google Ads" do PLANO foi reduzido pelo operador a **GA4 ape
 ## Não-objetivos / segurança
 
 - **Meta Pixel** — fora de escopo (operador adiou).
-- **Measurement Protocol API secret** (`a5W1vyOP…`) — **NÃO** entra no repo/código. É segredo server-side; este site não tem backend. Se um dia houver eventos server-side, o secret vive no Painel, não aqui. **Nunca commitar.**
+- **Measurement Protocol API secret** (`<redigido>`) — **NÃO** entra no repo/código. É segredo server-side; este site não tem backend. Se um dia houver eventos server-side, o secret vive no Painel, não aqui. **Nunca commitar** (nem fragmentos).
 - **Gating do `tracking.ts`** — decidido pelo operador: **fica sempre-ligado** (atribuição first-party, só sai do browser no submit de form; consentimento implícito no ato). Só o GA4 é gated. `lib/tracking.ts` e `TrackingProvider` ficam **intocados**.
 - **Google Consent Mode v2** — não (abordagem A simples foi a escolhida, não a C).
 

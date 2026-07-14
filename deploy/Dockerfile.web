@@ -12,6 +12,12 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY services/web/ ./
 ENV NEXT_TELEMETRY_DISABLED=1
+# NEXT_PUBLIC_* are inlined into the client bundle at build time, so the GA4 id must
+# be present HERE (not just at runtime in compose). Default is the public prod
+# Measurement id; override with --build-arg NEXT_PUBLIC_GA_ID= (empty) to disable
+# analytics for staging/preview builds.
+ARG NEXT_PUBLIC_GA_ID=G-K60P2FZ61K
+ENV NEXT_PUBLIC_GA_ID=$NEXT_PUBLIC_GA_ID
 RUN npm run build
 
 FROM node:20-slim AS runner

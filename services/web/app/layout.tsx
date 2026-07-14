@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { TrackingProvider } from '@/components/TrackingProvider';
+import { CookieConsent } from '@/components/CookieConsent';
 import { organizationJsonLd } from '@/lib/structured-data';
 import './globals.css';
 
@@ -46,6 +47,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd()) }}
         />
         <TrackingProvider />
+        <CookieConsent />
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
