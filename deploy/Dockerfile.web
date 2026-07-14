@@ -23,6 +23,11 @@ ENV NEXT_TELEMETRY_DISABLED=1
 # analytics for staging/preview builds.
 ARG NEXT_PUBLIC_GA_ID=G-K60P2FZ61K
 ENV NEXT_PUBLIC_GA_ID=$NEXT_PUBLIC_GA_ID
+# Meta Pixel id (marketing) — public client-side id, same as the GA id above. Default is the
+# prod Pixel, so the consent banner then covers analytics + marketing. Override with
+# --build-arg NEXT_PUBLIC_META_PIXEL_ID= (empty) to disable the Pixel for staging/preview.
+ARG NEXT_PUBLIC_META_PIXEL_ID=641491994507686
+ENV NEXT_PUBLIC_META_PIXEL_ID=$NEXT_PUBLIC_META_PIXEL_ID
 RUN --mount=type=cache,target=/app/.next/cache npm run build
 
 FROM node:20-slim AS runner

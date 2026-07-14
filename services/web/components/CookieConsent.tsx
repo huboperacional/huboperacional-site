@@ -2,10 +2,13 @@
 
 import { useEffect, useState } from 'react';
 import { Analytics } from './Analytics';
+import { MetaPixel } from './MetaPixel';
 
 const CONSENT_KEY = 'hub_consent';
-// Public GA4 Measurement ID, inlined at build. Absent (dev/preview) → no banner, no GA.
+// Public tracking ids, inlined at build. Both absent (dev/preview) → no banner, no tags.
+// GA4 = analytics; Meta Pixel = marketing. A single "Aceitar" grants whatever is configured.
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
+const PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID;
 
 type Consent = 'granted' | 'denied' | null;
 
@@ -38,8 +41,8 @@ export function CookieConsent() {
     return () => window.removeEventListener('hub:open-consent', reopen);
   }, []);
 
-  // Nothing to consent to without a configured GA id.
-  if (!GA_ID) return null;
+  // Nothing to consent to without at least one configured tracking id.
+  if (!GA_ID && !PIXEL_ID) return null;
   // Avoid an SSR/first-paint flash and hydration mismatch: render nothing until
   // the client has read the stored choice.
   if (!ready) return null;
@@ -55,15 +58,46 @@ export function CookieConsent() {
 
   return (
     <>
-      {consent === 'granted' && <Analytics gaId={GA_ID} />}
+      {consent === 'granted' && GA_ID && <Analytics gaId={GA_ID} />}
+      {consent === 'granted' && PIXEL_ID && <MetaPixel pixelId={PIXEL_ID} />}
       {consent === null && (
-        <Banner onAccept={() => choose('granted')} onReject={() => choose('denied')} />
+        <Banner
+          hasAnalytics={!!GA_ID}
+          hasMarketing={!!PIXEL_ID}
+          onAccept={() => choose('granted')}
+          onReject={() => choose('denied')}
+        />
       )}
     </>
   );
 }
 
-function Banner({ onAccept, onReject }: { onAccept: () => void; onReject: () => void }) {
+function Banner({
+  hasAnalytics,
+  hasMarketing,
+  onAccept,
+  onReject,
+}: {
+  hasAnalytics: boolean;
+  hasMarketing: boolean;
+  onAccept: () => void;
+  onReject: () => void;
+}) {
+  // Copy adapts to what is actually configured at build, so the banner never claims a
+  // tracker that will not load (LGPD honesty). GA-only branch is kept identical to the
+  // pre-Pixel wording so existing behaviour/tests are unchanged when no Pixel id is set.
+  const strong =
+    hasAnalytics && hasMarketing
+      ? 'Cookies de análise e marketing.'
+      : hasMarketing
+        ? 'Cookies de marketing.'
+        : 'Cookies de análise.';
+  const body =
+    hasAnalytics && hasMarketing
+      ? 'Usamos o Google Analytics (análise) e o Meta Pixel (marketing) pra medir e melhorar o site.'
+      : hasMarketing
+        ? 'Usamos o Meta Pixel (marketing) pra medir campanhas e melhorar o site.'
+        : 'Usamos o Google Analytics pra entender como o site é usado e melhorá-lo. Só analytics — nada de anúncios.';
   return (
     <div
       role="region"
@@ -74,8 +108,7 @@ function Banner({ onAccept, onReject }: { onAccept: () => void; onReject: () => 
         <span aria-hidden className="text-2xl leading-none mt-0.5">🍪</span>
         <div>
           <p className="text-sm text-steel-700">
-            <strong className="text-fg font-semibold">Cookies de análise.</strong> Usamos o Google
-            Analytics pra entender como o site é usado e melhorá-lo. Só analytics — nada de anúncios.
+            <strong className="text-fg font-semibold">{strong}</strong> {body}
           </p>
           <p className="text-xs text-steel-500 mt-1">
             Sua escolha fica salva neste navegador. Você pode mudar depois em “Cookies”, no rodapé.
