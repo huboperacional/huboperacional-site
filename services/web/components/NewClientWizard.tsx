@@ -278,6 +278,7 @@ export function NewClientWizard({ lang, dict }: { lang: Lang; dict: NewClientDic
               onChange={(v) => set('company_name', v)}
               error={errors.company_name}
               required
+              testId="nc-company_name"
             />
             <TextField
               label={data.country === 'BR' ? 'CNPJ' : 'EIN'}
@@ -286,6 +287,7 @@ export function NewClientWizard({ lang, dict }: { lang: Lang; dict: NewClientDic
               error={errors.tax_id}
               mono
               required
+              testId="nc-tax_id"
             />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <TextField label={dict.company.street} value={data.street} onChange={(v) => set('street', v)} optional={dict.common.optional} />
@@ -304,7 +306,7 @@ export function NewClientWizard({ lang, dict }: { lang: Lang; dict: NewClientDic
                   <label className="block text-sm font-medium mb-1">
                     {dict.company.regime} <span className="text-steel-500 font-normal">{dict.common.optional}</span>
                   </label>
-                  <select className={INPUT} value={data.tax_regime} onChange={(e) => set('tax_regime', e.target.value)}>
+                  <select className={INPUT} data-testid="nc-tax_regime" value={data.tax_regime} onChange={(e) => set('tax_regime', e.target.value)}>
                     <option value="">—</option>
                     {dict.company.regimeOptions.map((r) => (
                       <option key={r} value={r}>
@@ -327,10 +329,10 @@ export function NewClientWizard({ lang, dict }: { lang: Lang; dict: NewClientDic
         <div>
           <h1 className="text-2xl md:text-3xl font-bold tracking-tight mb-6">{dict.owner.title}</h1>
           <div className="space-y-4">
-            <TextField label={dict.owner.name} value={data.owner_name} onChange={(v) => set('owner_name', v)} error={errors.owner_name} required />
+            <TextField label={dict.owner.name} value={data.owner_name} onChange={(v) => set('owner_name', v)} error={errors.owner_name} required testId="nc-owner_name" />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <TextField label={dict.owner.email} type="email" value={data.owner_email} onChange={(v) => set('owner_email', v)} error={errors.owner_email} required />
-              <TextField label={dict.owner.phone} type="tel" mono value={data.owner_phone} onChange={(v) => set('owner_phone', v)} error={errors.owner_phone} required />
+              <TextField label={dict.owner.email} type="email" value={data.owner_email} onChange={(v) => set('owner_email', v)} error={errors.owner_email} required testId="nc-owner_email" />
+              <TextField label={dict.owner.phone} type="tel" mono value={data.owner_phone} onChange={(v) => set('owner_phone', v)} error={errors.owner_phone} required testId="nc-owner_phone" />
             </div>
             <TextField
               label={dict.owner.birthdate}
@@ -341,6 +343,7 @@ export function NewClientWizard({ lang, dict }: { lang: Lang; dict: NewClientDic
               placeholder={birthdatePlaceholder(data.country)}
               inputMode="numeric"
               mono
+              testId="nc-owner_birthdate"
             />
           </div>
           <NavRow dict={dict} onBack={goBack} onNext={goNext} />
@@ -361,10 +364,10 @@ export function NewClientWizard({ lang, dict }: { lang: Lang; dict: NewClientDic
 
           {!data.fin_is_owner && (
             <div className="space-y-4 mb-6 border-l-2 border-paper-3 pl-4">
-              <TextField label={dict.finance.finName} value={data.fin_name} onChange={(v) => set('fin_name', v)} error={errors.fin_name} required />
+              <TextField label={dict.finance.finName} value={data.fin_name} onChange={(v) => set('fin_name', v)} error={errors.fin_name} required testId="nc-fin_name" />
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <TextField label={dict.finance.finWhatsapp} type="tel" mono value={data.fin_whatsapp} onChange={(v) => set('fin_whatsapp', v)} error={errors.fin_whatsapp} required />
-                <TextField label={dict.finance.finEmail} type="email" value={data.fin_email} onChange={(v) => set('fin_email', v)} error={errors.fin_email} required />
+                <TextField label={dict.finance.finWhatsapp} type="tel" mono value={data.fin_whatsapp} onChange={(v) => set('fin_whatsapp', v)} error={errors.fin_whatsapp} required testId="nc-fin_whatsapp" />
+                <TextField label={dict.finance.finEmail} type="email" value={data.fin_email} onChange={(v) => set('fin_email', v)} error={errors.fin_email} required testId="nc-fin_email" />
               </div>
             </div>
           )}
@@ -478,6 +481,7 @@ function TextField({
   mono,
   placeholder,
   inputMode,
+  testId,
 }: {
   label: string;
   value: string;
@@ -489,6 +493,7 @@ function TextField({
   mono?: boolean;
   placeholder?: string;
   inputMode?: 'text' | 'numeric' | 'tel' | 'email';
+  testId?: string;
 }) {
   return (
     <div>
@@ -497,6 +502,7 @@ function TextField({
       </label>
       <input
         type={type}
+        data-testid={testId}
         value={value}
         placeholder={placeholder}
         inputMode={inputMode}
