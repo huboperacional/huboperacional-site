@@ -1,7 +1,9 @@
 # HANDOFF — huboperacional-site
 
 **Status:** ✅ MVP v0.1.1 + **v0.3 `/new-client`** em produção em `https://huboperacional.com.br`. Site image `v0.3.2`, Painel `ads4pros-api:newclient-202607121910`.
-**Última atualização:** 2026-07-12
+**Última atualização:** 2026-07-14
+
+> **2026-07-14 (tudo em `main`, pushado):** (1) **tag git `v0.3.3`** criada + pushada (alinha git à imagem prod já no ar). (2) **Frente v0.2 Qualidade — Playwright E2E `[5-T]`:** suíte E2E (17 specs, route interception, **zero chamada real ao Painel**) + contract-guard Vitest (4 casos). Vitest 20/20 + Playwright 17/17 verdes local. Feita via subagent-driven (fresh subagent/task + review 2-estágios) + review do conselho na spec + review final APPROVED_WITH_MINOR. Merged de `feat/playwright-e2e` → `main` (`1262d3d`). **Sem deploy** (dev-tooling; `data-testid` inerte no wizard; deploy é cadência R24). Gotchas do next dev/mock em memória `e2e-playwright-gotchas`. Spec `docs/superpowers/specs/2026-07-14-playwright-e2e-design.md`, plano `docs/superpowers/plans/2026-07-14-playwright-e2e.md`.
 
 > **Iterações pós-deploy (2026-07-12, tudo em prod e verificado):** (1) redirect `/new-client` → `/new-client/pt-br` (URL curta sem idioma dava 404); (2) **fix Dockerfile.web: `COPY public/`** — standalone não inclui `public/` e o MVP tinha removido o COPY, então os logos davam 404 em prod; agora os 5 assets servem 200; (3) logos reais dos 5 brands (`public/logos/*.png`, hero HOPE + Edifica/V4/Micro Investors/ADS4Pros) via `next/image` + `images.unoptimized`; (4) campo "Endereço completo" removido do wizard — endereço só nos campos separados (`address_full` segue auto-composto no `buildPayload`); (5) **data de nascimento no formato do país** (BR `DD/MM/AAAA`, US `MM/DD/YYYY`) via campo mascarado — `<input type=date>` seguia o locale do browser; converte pra ISO no submit; (6) **CTAs dos produtos** apontam pras plataformas (Tasks/Coach/Tickets `*.plexco.com.br`, Família `familiamilionaria.app`) + **novo produto GHL-Gowa Adapter** (categoria integração, agora 9 produtos). Site prod `v0.3.3`. Commits site `193559c`,`2ffc8aa`,`a2509f6`,`d337a7c` (pushados).
 >
@@ -30,7 +32,7 @@
   - **GHL ✅ RESOLVIDO (2026-07-13):** o operador tinha um Private Integration Token (`pit-…`, 40 chars) — mas colado no `.env` errado (raiz do repo do site, `D:\Claud Automations\huboperacional-site\.env`, gitignored/não-commitado ⇒ sem vazamento) e com nomes que o pydantic ignora (`GHL_PRIVATE_TOKEN`/`GHL_SUBACCOUNT_ID` em vez de `GHL_TOKEN`/`GHL_LOCATION_ID`). PIT validado na API (HTTP 200), mapeado pipeline "01 Marketing Pipeline" `blBrCsr8YPOPkDQukiQ6` / stage inicial "New Lead" `c421b90a-2bb0-427a-b353-0e640f77253f`. Injetadas `GHL_TOKEN`/`GHL_LOCATION_ID`/`GHL_PIPELINE_ID`/`GHL_STAGE_ID` via `--env-add` + persistidas no compose. Teste E2E: contato + opportunity criados no pipeline/stage certos (status open), limpos. NÃO usar os adapters OAuth (`ghlgowa`/`ghlevo`) como fonte de token — expiram/rotacionam.
   - **Os 3 side-effects (GOWA + Sheets + GHL) estão ATIVOS e verificados E2E.** v0.3 /new-client 100% funcional.
 - **✅ Env vars persistidas no stack (2026-07-13):** as 4 (`GOWA_*` + `GOOGLE_SA_JSON`) agora estão no compose autoritativo `/opt/ads4pros-api/docker-compose.api.yml` (bloco `environment:`, single-quoted, JSON compactado). Validado `docker stack config` + round-trip. Backup `.bak.20260713-144216-preSideEffects`. Stack é **CLI-managed (não Portainer)** — deploy via `docker stack deploy -c /opt/ads4pros-api/docker-compose.api.yml ads4pros-api`. Confirmado `GOOGLE_SA_JSON` parseia dentro do container (SA válido).
-- **Próximo passo imediato (retomada):** v0.3 /new-client **100% completa** (núcleo + atribuição + GOWA + Sheets + GHL todos `[5-T]`). Resta só: (1) smoke dos meta-tags SEO em prod → `[5-T]` (frente v0.2, independente); (2) considerar tag git `v0.3.3`; (3) commitar as docs (HANDOFF/PLANO) no próximo checkpoint.
+- **Próximo passo imediato (retomada):** v0.3 /new-client **100% completa** (`[5-T]`), SEO v0.2 verificado em prod (`[5-T]`), tag `v0.3.3` criada, **Playwright E2E `[5-T]`** (2026-07-14). Backlog v0.2 restante — **todos gated por input do operador:** (1) **OG image por produto** (next/og per-page) — gate de design R10 (decidir direção/mockup antes de codar); (2) **Pixels Meta + Google Ads** — precisa dos IDs de pixel + decisão de consentimento LGPD (R18); (3) **conteúdo definitivo dos 8/9 produtos** — curadoria do operador.
 
 ## Status de Features
 
@@ -43,7 +45,7 @@
 | v0.2 SEO | OG por produto (next/og per-page) | `[0]` | Gate de design R10 (mockup) |
 | v0.2 SEO | Pixels Meta + Google Ads | `[0]` | Operador: IDs + decisão LGPD |
 | v0.2 Qualidade | Vitest unit (structured-data, tracking, api) | `[5-T]` | — (16 testes verdes) |
-| v0.2 Qualidade | Playwright E2E | `[0]` | Estratégia de mock (submit real = risco) |
+| v0.2 Qualidade | Playwright E2E | `[5-T]` ✓ | **Concluído (2026-07-14)** — 17 specs route interception + contract-guard Vitest; verde local, zero chamada real |
 | v0.2 Conteúdo | Conteúdo definitivo dos 8 produtos | `[0]` 🎨? | Curadoria do operador |
 | **v0.3 /new-client** | Wizard bilíngue + endpoint Painel + atribuição afiliado | `[5-T]` ✓ | Em prod (v0.3.0). Falta: logos reais (operador) |
 | **v0.3 /new-client** | Side-effect GOWA (WhatsApp) | `[5-T]` ✓ | Em prod (device Notificador). Verificado E2E |
