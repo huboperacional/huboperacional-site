@@ -19,7 +19,7 @@ test.describe('/afiliados — affiliate signup', () => {
     // Note: the page header also mentions "4 mensagens" (before submit), so the
     // exact success-panel phrase is used here to avoid a strict-mode ambiguity.
     await expect(page.getByText('Enviamos 4 mensagens no WhatsApp')).toBeVisible();
-    expect(captured.body).toMatchObject({ name: 'Ana Souza', email: 'ana@example.com' });
+    expect(captured.body).toMatchObject({ name: 'Ana Souza', email: 'ana@example.com', whatsapp: '+55 67 99999-9999' });
     expect(captured.body).toHaveProperty('tracking');
   });
 
@@ -73,6 +73,9 @@ test.describe('/afiliados — affiliate signup', () => {
     await page.fill('#af-name', 'Ana Souza');
     await page.fill('#af-email', 'ana@example.com');
     await page.getByRole('button', { name: 'Quero ser parceiro' }).click();
+
+    // The empty required WhatsApp field must be :invalid — proves validation is engaged.
+    await expect(page.locator('#af-wa:invalid')).toBeVisible();
 
     await expect(page.getByText('Cadastro confirmado!')).toHaveCount(0);
     expect(captured.count).toBe(0);

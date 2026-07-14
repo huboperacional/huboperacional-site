@@ -50,6 +50,10 @@ test.describe('/contato — lead form', () => {
     await page.fill('#ct-msg', 'Mensagem de teste com mais de dez chars.');
     await page.getByRole('button', { name: 'Enviar mensagem' }).click();
 
+    // The empty required field must be in :invalid state — proves HTML5 validation is
+    // actually engaged (this fails loudly if the `required` attribute is ever removed).
+    await expect(page.locator('#ct-name:invalid')).toBeVisible();
+
     await expect(page.getByText('Mensagem enviada!')).toHaveCount(0);
     expect(captured.count).toBe(0);
   });
