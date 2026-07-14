@@ -2,7 +2,7 @@
 
 ## Versão do canon Percus adotada
 
-**Versão:** ver `.percus-version` na raiz deste projeto (`6.26.1`).
+**Versão:** ver `.percus-version` na raiz deste projeto (`6.28.0`).
 
 Esse arquivo (uma linha com semver) declara qual versão do canon Percus este projeto adotou no último upgrade.
 

@@ -1,11 +1,16 @@
+# syntax=docker/dockerfile:1
 # Multi-stage build pro Next.js 15 standalone.
 # Stage 1: deps. Stage 2: build. Stage 3: runner minimal node-slim.
 # Usa debian-slim em vez de alpine (fallback do pre-mortem — evita musl libc edge cases).
+# BuildKit cache mounts (canon v6.27.0 deploy-build-cache, opt-in): npm download cache + Next
+# incremental build cache persist across builds, so the 2nd build onward runs ~1-3min vs ~7-8min
+# cold. Font self-hosting from that recipe is N/A here: no next/font/google — fonts load via a
+# runtime <link>, so there is no build-time font fetch to eliminate.
 
 FROM node:20-slim AS deps
 WORKDIR /app
 COPY services/web/package*.json ./
-RUN npm install --no-audit --no-fund
+RUN --mount=type=cache,target=/root/.npm npm ci --no-audit --no-fund
 
 FROM node:20-slim AS builder
 WORKDIR /app
@@ -18,7 +23,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 # analytics for staging/preview builds.
 ARG NEXT_PUBLIC_GA_ID=G-K60P2FZ61K
 ENV NEXT_PUBLIC_GA_ID=$NEXT_PUBLIC_GA_ID
-RUN npm run build
+RUN --mount=type=cache,target=/app/.next/cache npm run build
 
 FROM node:20-slim AS runner
 WORKDIR /app
