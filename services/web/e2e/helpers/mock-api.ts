@@ -19,7 +19,19 @@ export type Captured = {
 
 async function installMock(page: Page, urlGlob: string, resp: MockResponse): Promise<Captured> {
   const captured: Captured = { body: null, count: 0 };
+  // Cross-origin (localhost:3000 → api.ads4pros.com) POSTs with a JSON content-type
+  // trigger a CORS preflight. page.route matches by URL, not method, so the OPTIONS
+  // hits this handler too — answer it with CORS headers so the real POST is sent.
+  const cors: Record<string, string> = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+  };
   await page.route(urlGlob, async (route: Route) => {
+    if (route.request().method() === 'OPTIONS') {
+      await route.fulfill({ status: 204, headers: cors });
+      return;
+    }
     captured.count += 1;
     const raw = route.request().postData();
     captured.body = raw ? (JSON.parse(raw) as Record<string, unknown>) : null;
@@ -30,6 +42,7 @@ async function installMock(page: Page, urlGlob: string, resp: MockResponse): Pro
     await route.fulfill({
       status: resp.status ?? 200,
       contentType: 'application/json',
+      headers: cors,
       body: JSON.stringify(resp.json ?? {}),
     });
   });
