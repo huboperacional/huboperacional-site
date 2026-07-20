@@ -2,7 +2,9 @@
 
 ## Versão do canon Percus adotada
 
-**Versão:** ver `.percus-version` na raiz deste projeto (`6.28.0`).
+**Versão:** ver `.percus-version` na raiz deste projeto (`6.29.0`).
+
+> ⚠️ **Divergência deliberada:** canon atual é `6.30.0`. O delta do PASSO B3 (canon V2: roteador de loops + gate mecânico de tamanho) está **em piloto** e foi **conscientemente não adotado** — não é drift acidental, não "corrigir" sem o operador mandar. Adotado até 6.29.0 (diretivas de Autonomia).
 
 Esse arquivo (uma linha com semver) declara qual versão do canon Percus este projeto adotou no último upgrade.
 
@@ -80,6 +82,16 @@ Tela com dado mock = banner `MODO DEMO` + toast `"salvo localmente"`, nunca só 
 ## Workflow obrigatório para features novas
 
 Brainstorming → plano → execução vertical `[0]→[5-T]` → `/percus-review:review` → commit. Feature visual de tela nova passa pelo gate de design (R10) ANTES de codar.
+
+## Autonomia — resolva o máximo sem perguntar (R5, R9, R11)
+
+O operador quer que você **resolva o máximo possível sozinho**. Confirmação é EXCEÇÃO, não default.
+
+- **Rode review/conselho/testes/lint/build/checkpoint sozinho.** ❌ Nunca peça "rode `/percus-review:review`" — você dispara o wrapper (auto-trigger). Ao finalizar uma **spec** → roda `spec-analyze` sozinho; ao finalizar um **plano** → roda `council-pre-mortem` sozinho. Sempre, sem perguntar.
+- **Maximize paralelo (default):** subagents pra tasks independentes, frentes disjuntas, múltiplos tool calls concorrentes numa só mensagem. Serial só com dependência real. Não paralelizar quando cabia = anti-padrão.
+- **Limpe lixo que VOCÊ criou** (scratchpad, worktrees temp, arquivos efêmeros, branches locais próprias) sem confirmar. R5 não se aplica a lixo auto-criado.
+- **Deploy/mutação de prod é autônomo (padrão Percus):** troca de env, `--env-add`, restart/redeploy, rollback, migration com `downgrade` testado → **execute direto, sem confirmar caso a caso**; escolha o caminho padrão (faça tudo, ex.: via SSH). Ler segredo do `.env` e usá-lo sem imprimir = ok.
+- **Quando confirmar for legítimo** (destruição irreversível de dados: `DELETE`/`DROP` em prod, force-push que apaga história): **uma pergunta binária "confirmo X? sim/não" com o caminho já decidido — NUNCA um menu "(a)/(b)/(c) quem faz o quê".**
 
 ## Review cross-provider (R11)
 
