@@ -2,7 +2,7 @@
 
 ## Versão do canon Percus adotada
 
-**Versão:** ver `.percus-version` na raiz deste projeto (`6.30.2`) — **alinhado** ao canon (V2 adotado no PASSO B3 em 2026-07-20: roteador de loops abaixo + gate mecânico de tamanho instalado em `.git/hooks/pre-commit`).
+**Versão:** ver `.percus-version` na raiz deste projeto (`6.30.4`) — **alinhado** ao canon (V2 adotado no PASSO B3 2026-07-20: roteador de loops abaixo + gate mecânico em `.git/hooks/pre-commit`, verificado VIVO 2026-07-21; execução de plano = subagent-driven).
 
 Esse arquivo (uma linha com semver) declara qual versão do canon Percus este projeto adotou no último upgrade.
 
@@ -106,6 +106,7 @@ O operador quer que você **resolva o máximo possível sozinho**. Confirmação
 
 - **Rode review/conselho/testes/lint/build/checkpoint sozinho.** ❌ Nunca peça "rode `/percus-review:review`" — você dispara o wrapper (auto-trigger). Ao finalizar uma **spec** → roda `spec-analyze` sozinho; ao finalizar um **plano** → roda `council-pre-mortem` sozinho. Sempre, sem perguntar.
 - **Maximize paralelo (default):** subagents pra tasks independentes, frentes disjuntas, múltiplos tool calls concorrentes numa só mensagem. Serial só com dependência real. Não paralelizar quando cabia = anti-padrão.
+- **Execução de plano = subagent-driven por default (R9):** plano/frente com 2+ tasks independentes → **um subagente por task, revisando entre tasks**, sem perguntar "subagent ou inline?" (pergunta boba, família da trava do R5). Inline só pra tarefa única trivial.
 - **Limpe lixo que VOCÊ criou** (scratchpad, worktrees temp, arquivos efêmeros, branches locais próprias) sem confirmar. R5 não se aplica a lixo auto-criado.
 - **Deploy/mutação de prod é autônomo (padrão Percus):** troca de env, `--env-add`, restart/redeploy, rollback, migration com `downgrade` testado → **execute direto, sem confirmar caso a caso**; escolha o caminho padrão (faça tudo, ex.: via SSH). Ler segredo do `.env` e usá-lo sem imprimir = ok.
 - **Quando confirmar for legítimo** (destruição irreversível de dados: `DELETE`/`DROP` em prod, force-push que apaga história): **uma pergunta binária "confirmo X? sim/não" com o caminho já decidido — NUNCA um menu "(a)/(b)/(c) quem faz o quê".**
