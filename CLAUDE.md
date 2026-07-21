@@ -2,7 +2,7 @@
 
 ## Versão do canon Percus adotada
 
-**Versão:** ver `.percus-version` na raiz deste projeto (`6.30.4`) — **alinhado** ao canon (V2 adotado no PASSO B3 2026-07-20: roteador de loops abaixo + gate mecânico em `.git/hooks/pre-commit`, verificado VIVO 2026-07-21; execução de plano = subagent-driven).
+**Versão:** ver `.percus-version` na raiz deste projeto (`6.30.6`) — **alinhado** ao canon (V2 adotado no PASSO B3 2026-07-20: roteador de loops abaixo + gate mecânico em `.git/hooks/pre-commit`; instalador re-rodado em 6.30.6 e gate **verificado RODANDO env-less** 2026-07-21 — barra HANDOFF de 230 linhas, passa com 30; execução de plano = subagent-driven).
 
 Esse arquivo (uma linha com semver) declara qual versão do canon Percus este projeto adotou no último upgrade.
 
