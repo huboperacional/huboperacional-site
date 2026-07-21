@@ -2,7 +2,7 @@
 
 ## Estado agora
 
-Site **v0.3.5** em produção (`https://huboperacional.com.br`), canon Percus **6.30.2** (V2 adotado 2026-07-21). Tudo do MVP v0.1 + v0.2 (SEO, GA4 + Meta Pixel consent-gated, Vitest+Playwright) + v0.3 `/new-client` (wizard bilíngue + endpoint no Painel + 3 side-effects GOWA/Sheets/GHL) está `[5-T]` verificado em prod, sem regressão (smoke 8 páginas 200). Repo `github.com/huboperacional/huboperacional-site` (`main`, tags `v0.1.0`..`v0.3.5`, imagem prod `v0.3.5`). Backend é o Painel (`api.ads4pros.com`) — este site não tem backend próprio.
+Site **v0.3.5** em produção (`https://huboperacional.com.br`), canon Percus **6.30.4** (V2 adotado 2026-07-21, gate verificado vivo+curado). Tudo do MVP v0.1 + v0.2 (SEO, GA4 + Meta Pixel consent-gated, Vitest+Playwright) + v0.3 `/new-client` (wizard bilíngue + endpoint no Painel + 3 side-effects GOWA/Sheets/GHL) está `[5-T]` verificado em prod, sem regressão (smoke 8 páginas 200). Repo `github.com/huboperacional/huboperacional-site` (`main`, tags `v0.1.0`..`v0.3.5`, imagem prod `v0.3.5`). Backend é o Painel (`api.ads4pros.com`) — este site não tem backend próprio.
 
 ## Próximo passo
 
