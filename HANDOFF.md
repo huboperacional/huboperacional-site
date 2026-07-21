@@ -6,7 +6,7 @@ Site **v0.3.5** em produção (`https://huboperacional.com.br`), canon Percus **
 
 ## Próximo passo
 
-Não há trabalho obrigatório no site. Candidatos, em ordem: (1) **self-host de fontes** (`<link>` Google Fonts → `next/font/local`; perf + LGPD), que passa pelo gate de design R10; (2) re-verificar o welcome em **cold reach-out real depois de ~27/07** (só confirmação de infra, o código já está `[5-T]`).
+Não há trabalho obrigatório no site. Único item pendurado: **re-verificar o welcome em cold reach-out real a partir de 2026-07-28** (após o timelock abaixo) — só confirmação de infra, o código já está `[5-T]`. O **self-host de fontes** foi **declinado pelo operador em 2026-07-21**: segue disponível como melhoria opcional, mas **não** é próximo passo — não re-proponha sem pedido dele.
 
 ## Bloqueios
 
@@ -17,7 +17,7 @@ Não há trabalho obrigatório no site. Candidatos, em ordem: (1) **self-host de
 
 | Feature | Estado | O que falta |
 |---|---|---|
-| Self-host de fontes (opcional) | `[0]` | `<link>` Google Fonts → `next/font/local` (perf sem render-block + LGPD); mexe em página → gate de design R10 |
+| Self-host de fontes (opcional, **declinado 21/07**) | `[0]` | `<link>` Google Fonts → `next/font/local` (perf sem render-block + LGPD); mexe em página → gate de design R10. Parado por decisão do operador — só retomar sob pedido. |
 
 ## Onde está o resto
 
