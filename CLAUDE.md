@@ -2,9 +2,7 @@
 
 ## Versão do canon Percus adotada
 
-**Versão:** ver `.percus-version` na raiz deste projeto (`6.29.0`).
-
-> ⚠️ **Divergência deliberada:** canon atual é `6.30.0`. O delta do PASSO B3 (canon V2: roteador de loops + gate mecânico de tamanho) está **em piloto** e foi **conscientemente não adotado** — não é drift acidental, não "corrigir" sem o operador mandar. Adotado até 6.29.0 (diretivas de Autonomia).
+**Versão:** ver `.percus-version` na raiz deste projeto (`6.30.2`) — **alinhado** ao canon (V2 adotado no PASSO B3 em 2026-07-20: roteador de loops abaixo + gate mecânico de tamanho instalado em `.git/hooks/pre-commit`).
 
 Esse arquivo (uma linha com semver) declara qual versão do canon Percus este projeto adotou no último upgrade.
 
@@ -13,6 +11,25 @@ Esse arquivo (uma linha com semver) declara qual versão do canon Percus este pr
 2. `Get-Content "${env:PERCUS_CANON_DIR}\CANON_VERSION.md" -TotalCount 5` — versão canônica atual.
 3. Declarar no primeiro turno: "Projeto na versão X.Y.Z, canônica atual A.B.C — alinhado/divergente."
 4. Se divergente, sugerir rodar `${env:PERCUS_CANON_DIR}\comandos\REORGANIZAR_PROJETO.md` antes de trabalho não-trivial.
+
+## Roteador de loops (canon V2 — v6.30.0+)
+
+Procedimento não mora neste arquivo: mora em `${env:PERCUS_CANON_DIR}/v2/loops/` e você
+carrega **só o loop da situação**. Invariantes: `${env:PERCUS_CANON_DIR}/v2/CONSTITUICAO.md`.
+
+| Situação | Leia AGORA |
+|---|---|
+| Feature/pedido novo, intenção ainda vaga | `v2/loops/grilling.md` |
+| Intenção clara → escrever requisito | `v2/loops/spec.md` |
+| Spec ou plano acabou de fechar | `v2/loops/conselho.md` (automático, não pergunte) |
+| Vai começar a implementar | `v2/loops/tdd.md` |
+| Vai commitar | `v2/loops/review.md` |
+| Marco pronto pra prod | `v2/loops/deploy.md` |
+| Sessão terminando / contexto cheio | `v2/loops/checkpoint.md` |
+| Algo repetidamente estranho (escape reincidente, doc que não bate) | `v2/loops/drift.md` |
+
+Sem situação da tabela → não carregue loop nenhum. Formatos de artefato (HANDOFF/CONTEXT/
+ADR/PLANO): `${env:PERCUS_CANON_DIR}/v2/artefatos/`.
 
 ## O que é este projeto
 
